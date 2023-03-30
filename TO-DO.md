@@ -1,0 +1,6 @@
+- [ ] Azure initialization
+- [ ] DB Tables
+- [ ] DB Diagram
+- [ ] Blob Storage
+- [ ] API
+- [ ] UI

@@ -1,1 +1,1 @@
-# Documentación EduHub
+# Documentación
