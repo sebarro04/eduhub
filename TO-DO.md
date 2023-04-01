@@ -2,6 +2,6 @@
 - [ ] DB Model -> Todos
 - [ ] Contratos -> Todos
 - [ ] NodeJS -> Arrojas
-- [ ] Firebase & thunkable -> Gerald 
-- [ ] API Bloob Storage -> (1 persona)
+- [ ] Firebase & thunkable -> (1 persona)
+- [ ] API Bloob Storage -> Gerald
 - [ ] APIs for thunkable -> (2 personas)
