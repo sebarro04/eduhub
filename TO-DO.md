@@ -1,6 +1,7 @@
-- [ ] Azure initialization
-- [ ] DB Tables
-- [ ] DB Diagram
-- [ ] Blob Storage
-- [ ] API
-- [ ] UI
+- [ ] Azure initialization -> Arroniz
+- [ ] DB Model -> Todos
+- [ ] Contratos -> Todos
+- [ ] NodeJS -> Arroniz
+- [ ] Firebase & thunkable -> (1 persona)
+- [ ] API Bloob Storage -> (1 persona)
+- [ ] APIs for thunkable -> (2 personas)
