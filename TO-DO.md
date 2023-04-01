@@ -1,7 +1,7 @@
-- [ ] Azure initialization -> Arrojas
+- [ ] Azure initialization -> Arroniz
 - [ ] DB Model -> Todos
 - [ ] Contratos -> Todos
-- [ ] NodeJS -> Arrojas
+- [ ] NodeJS -> Arroniz
 - [ ] Firebase & thunkable -> (1 persona)
 - [ ] API Bloob Storage -> Gerald
 - [ ] APIs for thunkable -> (2 personas)
