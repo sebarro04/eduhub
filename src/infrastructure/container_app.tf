@@ -31,8 +31,8 @@ template {
     max_replicas = 10
     min_replicas = 0
     container {
-      name   = "api-demo"
-      image  = "docker.io/nereo08/api-demo:latest"
+      name   = "api"
+      image  = "docker.io/sebarro04/api:latest"
       cpu    = "0.25"
       memory = "0.5Gi"
       env {
