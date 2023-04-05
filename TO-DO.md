@@ -3,5 +3,5 @@
 - [ ] Contratos -> Todos
 - [ ] NodeJS -> 1 persona
 - [ ] Firebase & thunkable -> Erick
-- [ ] API Bloob Storage -> 1 persona
+- [ ] API Bloob Storage -> Sofía
 - [ ] APIs for thunkable -> Arroniz y Gerald
