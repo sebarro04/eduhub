@@ -1,70 +1,37 @@
-CREATE TABLE role (
-    id INT NOT NULL CONSTRAINT PK__role PRIMARY KEY(id),
-    name VARCHAR(256) NOT NULL CONSTRAINT UQ__role__name UNIQUE(name)
-)
-GO
-
-CREATE TABLE person (
-	id CHAR(10) NOT NULL CONSTRAINT PK__user PRIMARY KEY(id),
-	identity_card CHAR(9) NOT NULL CONSTRAINT UQ__user__identity_card UNIQUE(identity_card),
-	name NVARCHAR(256) NOT NULL,
-	last_name NVARCHAR(256) NOT NULL,
-	second_last_name NVARCHAR(256) NOT NULL,
-	email NVARCHAR(255) NOT NULL CONSTRAINT UQ__user__email UNIQUE(email),
-	birth_date DATE NOT NULL,
-	phone_number CHAR(8) NOT NULL
-)
-GO
-
 CREATE TABLE period_type (
 	id INT NOT NULL CONSTRAINT PK__period_type PRIMARY KEY(id),
-	name VARCHAR(256) NOT NULL CONSTRAINT UQ__school_period_type__name UNIQUE(name)
+	name VARCHAR(255) NOT NULL CONSTRAINT UQ__period_type__name UNIQUE(name)
 )
 GO
 
 CREATE TABLE period_status (
-	id INT NOT NULL CONSTRAINT PK__school_period_status PRIMARY KEY(id),
-	name VARCHAR(256) NOT NULL CONSTRAINT UQ__school_period_status__name UNIQUE(name)
+	id INT NOT NULL CONSTRAINT PK__period_status PRIMARY KEY(id),
+	name VARCHAR(255) NOT NULL CONSTRAINT UQ__period_status__name UNIQUE(name)
 )
 GO
 
-CREATE TABLE school_period (
-	id INT IDENTITY(1, 1) NOT NULL CONSTRAINT PK__school_period PRIMARY KEY(id),
-	period_type_id INT NOT NULL CONSTRAINT FK__school_period__period_type FOREIGN KEY(period_type_id) REFERENCES period_type(id),
+CREATE TABLE period (
+	id INT IDENTITY(1, 1) NOT NULL CONSTRAINT PK__period PRIMARY KEY(id),
+	period_type_id INT NOT NULL CONSTRAINT FK__period__period_type FOREIGN KEY(period_type_id) REFERENCES period_type(id),
 	start_time DATE NOT NULL,
 	end_time DATE NOT NULL,
-	period_status_id INT NOT NULL CONSTRAINT FK__school_period__period_status FOREIGN KEY(period_status_id) REFERENCES period_status(id),
-	CONSTRAINT CHK__school_period__start_time__end_time CHECK(start_time < end_time)
+	period_status_id INT NOT NULL CONSTRAINT FK__period__period_status FOREIGN KEY(period_status_id) REFERENCES period_status(id),
+	CONSTRAINT CHK__period__start_time__end_time CHECK(start_time < end_time)
 )
 GO
 
 CREATE TABLE school (
 	id CHAR(2) NOT NULL CONSTRAINT PK__id PRIMARY KEY(id),
-	name VARCHAR(256) NOT NULL CONSTRAINT UQ__school__name UNIQUE(name),
+	name VARCHAR(255) NOT NULL CONSTRAINT UQ__school__name UNIQUE(name),
 	email NVARCHAR(255) NOT NULL CONSTRAINT UQ__school__email UNIQUE(email),
 	phone_number CHAR(8) NOT NULL CONSTRAINT UQ__school__phone_number UNIQUE(phone_number),
-	person_id CHAR(10) NOT NULL CONSTRAINT FK__school__person FOREIGN KEY(person_id) REFERENCES person(id)
-)
-GO
-
-CREATE TABLE archive_type (
-	id
-)
-GO
-
-CREATE TABLE archive (
-	id INT IDENTITY(1, 1) CONSTRAINT PK__archive PRIMARY KEY(id),
-	name NVARCHAR(255) NOT NULL,
-	directory NVARCHAR(255) NOT NULL,
-	creation_time DATETIME NOT NULL,
-	last_update_time DATETIME NOT NULL,
-	type 
+	director_id VARCHAR(255) NOT NULL
 )
 GO
 
 CREATE TABLE course (
 	id CHAR(4) NOT NULL CONSTRAINT PK__course PRIMARY KEY(id),
-	name VARCHAR(256) NOT NULL CONSTRAINT UQ__course__name UNIQUE(name),
+	name VARCHAR(255) NOT NULL CONSTRAINT UQ__course__name UNIQUE(name),
 	period_type_id INT NOT NULL CONSTRAINT FK__course__period_type FOREIGN KEY(period_type_id) REFERENCES period_type(id),
 	credits INT NOT NULL CONSTRAINT CHK__course__credits CHECK(credits >= 0),
 	school_id CHAR(2) NOT NULL CONSTRAINT FK__course__school FOREIGN KEY(school_id) REFERENCES school(id),
@@ -75,6 +42,127 @@ GO
 
 CREATE TABLE career (
 	id INT IDENTITY(1, 1) CONSTRAINT PK__career PRIMARY KEY(id),
-	name VARCHAR(256)
+	name VARCHAR(255),
+	school_id CHAR(2) NOT NULL CONSTRAINT FK__career__school FOREIGN KEY(school_id) REFERENCES school(id),
+	description TEXT NOT NULL
+)
+GO
+
+CREATE TABLE curriculum_status (
+	id INT NOT NULL CONSTRAINT PK__curriculum_status PRIMARY KEY(id),
+	name VARCHAR(255) NOT NULL CONSTRAINT UQ__curriculum_status__name UNIQUE(name)
+)
+GO
+
+CREATE TABLE curriculum (
+	id VARCHAR(4) NOT NULL CONSTRAINT PK__curriculum PRIMARY KEY(id),
+	curriculum_status_id INT NOT NULL CONSTRAINT FK__curriculum__curriculum_status FOREIGN KEY(curriculum_status_id) REFERENCES curriculum_status(id),
+	career_id INT NOT NULL CONSTRAINT FK__curriculum__career FOREIGN KEY(career_id) REFERENCES career(id),
+	creation_date DATE NOT NULL,
+	activation_date DATE NOT NULL,
+	finish_date DATE NOT NULL,
+	CONSTRAINT CHK__curriculum__activation_date__finish_date CHECK(activation_date < finish_date),
+	CONSTRAINT CHK__curriculum__creation_date__activation_date__finish_date CHECK(creation_date < activation_date)
+)
+GO
+
+CREATE TABLE curriculum_course (
+	id INT IDENTITY(1, 1) NOT NULL CONSTRAINT PK__curriculum_course PRIMARY KEY(id),
+	curriculum_id VARCHAR(4) NOT NULL CONSTRAINT FK__curriculum_course__curriculum FOREIGN KEY(curriculum_id) REFERENCES curriculum(id),
+	course_id CHAR(4) NOT NULL CONSTRAINT FK__curriculum_course__course FOREIGN KEY(course_id) REFERENCES course(id)
+)
+GO
+
+CREATE TABLE curriculum_course_dependency (
+	id INT IDENTITY(1, 1) NOT NULL CONSTRAINT PK__course_dependency PRIMARY KEY(id),
+	curriculum_id VARCHAR(4) NOT NULL CONSTRAINT FK__curriculum_course_dependency__curriculum FOREIGN KEY(curriculum_id) REFERENCES curriculum(id),
+	course_id CHAR(4) NOT NULL CONSTRAINT FK__curriculum_course_dependency__course FOREIGN KEY(course_id) REFERENCES course(id),
+	course_dependency_id CHAR(4) NOT NULL CONSTRAINT FK__curriculum_course_dependency__course FOREIGN KEY(course_dependency_id) REFERENCES course(id)
+)
+GO
+
+CREATE TABLE curriculum_course_prerequisite (
+	id INT IDENTITY(1, 1) NOT NULL CONSTRAINT PK__curriculum_course_prerequisite PRIMARY KEY(id),
+	curriculum_id VARCHAR(4) NOT NULL CONSTRAINT FK__curriculum_course_prerequisite__curriculum FOREIGN KEY(curriculum_id) REFERENCES curriculum(id),
+	course_id CHAR(4) NOT NULL CONSTRAINT FK__curriculum_course_prerequisite__course FOREIGN KEY(course_id) REFERENCES course(id),
+	course_prerequisite_id CHAR(4) NOT NULL CONSTRAINT FK__curriculum_course_prerequisite__course FOREIGN KEY(course_prerequisite_id) REFERENCES course(id)
+)
+GO
+
+CREATE TABLE group (
+	id INT IDENTITY(1, 1) NOT NULL CONSTRAINT PK__group PRIMARY KEY(id),
+	course_id CHAR(4) NOT NULL CONSTRAINT FK__group__course FOREIGN KEY(course_id) REFERENCES course(id),
+	period_id INT NOT NULL CONSTRAINT FK__group__period FOREIGN KEY(period_id) REFERENCES period(id),
+	professor_id VARCHAR(255) NOT NULL,
+	max_student_capacity INT NOT NULL CONSTRAINT CHK__group__max_student_capacity CHECK(max_student_capacity > 0)
+)
+GO
+
+CREATE TABLE day (
+	id INT NOT NULL CONSTRAINT PK__day PRIMARY KEY(id),
+	name VARCHAR(255) NOT NULL CONSTRAINT UQ__day__name UNIQUE(name)
+)
+GO
+
+CREATE TABLE schedule (
+	id INT IDENTITY(1, 1) NOT NULL CONSTRAINT PK__schedule PRIMARY KEY(id),
+	group_id INT NOT NULL CONSTRAINT FOREIGN KEY(group_id) REFERENCES group(id),
+	day_id INT NOT NULL CONSTRAINT FOREIGN KEY(day_id) REFERENCES day(id),
+	start_time TIME NOT NULL,
+	end_time TIME NOT NULL,
+	CONSTRAINT CHK__schedule__start_time__end_time CHECK(start_time < end_time)
+)
+GO
+
+CREATE TABLE archive_type (
+	id INT NOT NULL CONSTRAINT PK__archive_type PRIMARY KEY(id),
+	name VARCHAR(255) NOT NULL CONSTRAINT UQ__archive_type__name UNIQUE(name)
+)
+GO
+
+CREATE TABLE archive (
+	id INT IDENTITY(1, 1) NOT NULL CONSTRAINT PK__archive PRIMARY KEY(id),
+	user_id VARCHAR(255) NOT NULL,
+	archive_type_id INT NOT NULL CONSTRAINT FOREIGN KEY(archive_type_id) REFERENCES archive_type(id),
+	period_id INT NOT NULL CONSTRAINT FK__archive__period FOREIGN KEY(period_id) REFERENCES period(id),
+	creation_date DATETIME NOT NULL,
+	last_update_date DATETIME NOT NULL,
+	name NVARCHAR(255) NOT NULL,
+	description NVARCHAR(255) NOT NULL
+)
+GO
+
+CREATE TABLE course_archive (
+	id INT IDENTITY(1, 1) NOT NULL CONSTRAINT PK__course_archive PRIMARY KEY(id),
+	course_id CHAR(4) NOT NULL CONSTRAINT FK__course_archive__course FOREIGN KEY(course_id) REFERENCES course(id),
+	archive_id INT NOT NULL CONSTRAINT FK__course_archive__archive FOREIGN KEY(archive_id) REFERENCES archive(id)
+)
+GO
+
+CREATE TABLE career_archive (
+	id INT IDENTITY(1, 1) NOT NULL CONSTRAINT PK__career_archive PRIMARY KEY(id),
+	career_id CHAR(4) NOT NULL CONSTRAINT FK__career_archive__career FOREIGN KEY(career_id) REFERENCES career(id),
+	archive_id INT NOT NULL CONSTRAINT FK__career_archive__archive FOREIGN KEY(archive_id) REFERENCES archive(id)
+)
+GO
+
+CREATE TABLE group_archive (
+	id INT IDENTITY(1, 1) NOT NULL CONSTRAINT PK__group_archive PRIMARY KEY(id),
+	group_id CHAR(4) NOT NULL CONSTRAINT FK__group_archive__group FOREIGN KEY(group_id) REFERENCES group(id),
+	archive_id INT NOT NULL CONSTRAINT FK__group_archive__archive FOREIGN KEY(archive_id) REFERENCES archive(id)
+)
+GO
+
+CREATE TABLE student_curriculum (
+	id INT IDENTITY(1, 1) NOT NULL CONSTRAINT PK__student_curriculum PRIMARY KEY(id),
+	student_id VARCHAR(255) NOT NULL,
+	curriculum_id VARCHAR(4) NOT NULL CONSTRAINT FK__student_curriculum__curriculum FOREIGN KEY(curriculum_id) REFERENCES curriculum(id)
+)
+GO
+
+CREATE TABLE professor_school (
+	id INT IDENTITY(1, 1) NOT NULL CONSTRAINT PK__professor_school PRIMARY KEY(id),
+	professor_id VARCHAR(255) NOT NULL,
+	school_id CHAR(2) NOT NULL CONSTRAINT FK__professor_school__school FOREIGN KEY(school_id) REFERENCES school(id)
 )
 GO
