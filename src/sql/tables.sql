@@ -89,12 +89,12 @@ CREATE TABLE curriculum_course_prerequisite (
 )
 GO
 
-CREATE TABLE group (
-	id INT IDENTITY(1, 1) NOT NULL CONSTRAINT PK__group PRIMARY KEY(id),
-	course_id CHAR(4) NOT NULL CONSTRAINT FK__group__course FOREIGN KEY(course_id) REFERENCES course(id),
-	period_id INT NOT NULL CONSTRAINT FK__group__period FOREIGN KEY(period_id) REFERENCES period(id),
+CREATE TABLE class (
+	id INT IDENTITY(1, 1) NOT NULL CONSTRAINT PK__class PRIMARY KEY(id),
+	course_id CHAR(4) NOT NULL CONSTRAINT FK__class__course FOREIGN KEY(course_id) REFERENCES course(id),
+	period_id INT NOT NULL CONSTRAINT FK__class__period FOREIGN KEY(period_id) REFERENCES period(id),
 	professor_id VARCHAR(255) NOT NULL,
-	max_student_capacity INT NOT NULL CONSTRAINT CHK__group__max_student_capacity CHECK(max_student_capacity > 0)
+	max_student_capacity INT NOT NULL CONSTRAINT CHK__class__max_student_capacity CHECK(max_student_capacity > 0)
 )
 GO
 
@@ -106,8 +106,8 @@ GO
 
 CREATE TABLE schedule (
 	id INT IDENTITY(1, 1) NOT NULL CONSTRAINT PK__schedule PRIMARY KEY(id),
-	group_id INT NOT NULL CONSTRAINT FOREIGN KEY(group_id) REFERENCES group(id),
-	day_id INT NOT NULL CONSTRAINT FOREIGN KEY(day_id) REFERENCES day(id),
+	class_id INT NOT NULL CONSTRAINT FK__schedule__class FOREIGN KEY(class_id) REFERENCES class(id),
+	day_id INT NOT NULL CONSTRAINT FK__schedule__day FOREIGN KEY(day_id) REFERENCES day(id),
 	start_time TIME NOT NULL,
 	end_time TIME NOT NULL,
 	CONSTRAINT CHK__schedule__start_time__end_time CHECK(start_time < end_time)
@@ -123,7 +123,7 @@ GO
 CREATE TABLE archive (
 	id INT IDENTITY(1, 1) NOT NULL CONSTRAINT PK__archive PRIMARY KEY(id),
 	user_id VARCHAR(255) NOT NULL,
-	archive_type_id INT NOT NULL CONSTRAINT FOREIGN KEY(archive_type_id) REFERENCES archive_type(id),
+	archive_type_id INT NOT NULL CONSTRAINT FK__archive__archive_type FOREIGN KEY(archive_type_id) REFERENCES archive_type(id),
 	period_id INT NOT NULL CONSTRAINT FK__archive__period FOREIGN KEY(period_id) REFERENCES period(id),
 	creation_date DATETIME NOT NULL,
 	last_update_date DATETIME NOT NULL,
@@ -146,10 +146,10 @@ CREATE TABLE career_archive (
 )
 GO
 
-CREATE TABLE group_archive (
-	id INT IDENTITY(1, 1) NOT NULL CONSTRAINT PK__group_archive PRIMARY KEY(id),
-	group_id CHAR(4) NOT NULL CONSTRAINT FK__group_archive__group FOREIGN KEY(group_id) REFERENCES group(id),
-	archive_id INT NOT NULL CONSTRAINT FK__group_archive__archive FOREIGN KEY(archive_id) REFERENCES archive(id)
+CREATE TABLE class_archive (
+	id INT IDENTITY(1, 1) NOT NULL CONSTRAINT PK__class_archive PRIMARY KEY(id),
+	class_id CHAR(4) NOT NULL CONSTRAINT FK__class_archive__class FOREIGN KEY(class_id) REFERENCES class(id),
+	archive_id INT NOT NULL CONSTRAINT FK__class_archive__archive FOREIGN KEY(archive_id) REFERENCES archive(id)
 )
 GO
 
