@@ -2,6 +2,6 @@
 - [ ] DB Model -> Todos
 - [ ] Contratos -> Todos
 - [ ] NodeJS -> 1 persona
-- [ ] Firebase & thunkable -> (1 persona)
+- [ ] Firebase & thunkable -> Erick
 - [ ] API Bloob Storage -> 1 persona
 - [ ] APIs for thunkable -> Arroniz y Gerald
