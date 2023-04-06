@@ -177,29 +177,33 @@ CREATE TABLE registration_period (
 	name VARCHAR(255) NOT NULL,
 	start_time DATE NOT NULL,
 	end_time DATE NOT NULL,
+	period_status BIT NOT NULL, /*Aqui seria manejarlo como 1 o 0, o crear una tabla de estado para este estado en especifico, ya que el estado es abierto o cerrado*/
 	academic_period_id CHAR(4) NOT NULL CONSTRAINT FK__academic_period__period FOREIGN KEY(academic_period_id) REFERENCES course(id),
-	period_status BIT NOT NULL, /*Aqui seria manejarlo como 1 o 0, o crear una tabla de estado para este en especifico, ya que el estado es abierto o cerrado*/
 	CONSTRAINT CHK__registration_period__start_time__end_time CHECK(start_time < end_time)
 )
 GO
 
 CREATE TABLE evaluation (
 	id INT IDENTITY(1, 1) NOT NULL CONSTRAINT PK__evaluation PRIMARY KEY(id),
-	CONSTRAINT CHK_Activities_DateSum CHECK (SUM(SELECT Percentage FROM evaluation_category WHERE id = evaluation_category.evaluation_id) <= 100)
+	class_id INT NOT NULL FK__evaluation__class FOREIGN KEY REFERENCES class(id),
+	CONSTRAINT CHK__evaluation__percentage_check CHECK (SUM(SELECT Percentage FROM evaluation_category WHERE evaluation.id = evaluation_category.evaluation_id) <= 100)
 )
 GO
 
 CREATE TABLE evaluation_category (
 	id INT IDENTITY(1, 1) NOT NULL CONSTRAINT PK__evaluation_category PRIMARY KEY(id),
-	name NVARCHAR(255) NOT NULL,
+	name VARCHAR(255) NOT NULL,
 	percentage INT NOT NULL, 
 	evaluation_id INT NOT NULL FK__evaluation_category__evaluation FOREIGN KEY(evaluation_id) REFERENCES evalutation(id)
-	CONSTRAINT CK_Activities_DateSum CHECK (SUM(SELECT Percentage FROM activity WHERE id = activity.id) <= 100)
+	CONSTRAINT CHK__evalutation_category__percentage_activity_check CHECK (SUM(SELECT Percentage FROM activity WHERE evaluation_category.id = activity.id) <= percentage)
 )
 GO 
 
 CREATE TABLE activity(
 	id IDENTITY(1, 1) NOT NULL CONSTRAINT PK__activity PRIMARY KEY(id),
-	evaluation_category
+	name VARCHAR(255) NOT NULL,
+	due_date DATE NOT NULL,
+	activity_percentage INT NOT NULL
 )
 GO
+
