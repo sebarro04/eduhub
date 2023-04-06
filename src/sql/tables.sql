@@ -94,7 +94,15 @@ CREATE TABLE class (
 	course_id CHAR(4) NOT NULL CONSTRAINT FK__class__course FOREIGN KEY(course_id) REFERENCES course(id),
 	period_id INT NOT NULL CONSTRAINT FK__class__period FOREIGN KEY(period_id) REFERENCES period(id),
 	professor_id VARCHAR(255) NOT NULL,
-	max_student_capacity INT NOT NULL CONSTRAINT CHK__class__max_student_capacity CHECK(max_student_capacity > 0)
+	max_student_capacity INT NOT NULL CONSTRAINT CHK__class__max_student_capacity CHECK(max_student_capacity >= 0)
+)
+GO
+
+CREATE TABLE student_class (
+	id INT IDENTITY(1, 1) NOT NULL CONSTRAINT PK__student_class PRIMARY KEY(id),
+	student_id VARCHAR(255) NOT NULL,
+	class_id INT NOT NULL CONSTRAINT FOREIGN KEY(class_id) REFERENCES class(id),
+	grade FLOAT NOT NULL CONSTRAINT CHK__student_class__grade CHECK(grade >= 0)
 )
 GO
 
@@ -126,7 +134,7 @@ CREATE TABLE archive (
 	archive_type_id INT NOT NULL CONSTRAINT FK__archive__archive_type FOREIGN KEY(archive_type_id) REFERENCES archive_type(id),
 	period_id INT NOT NULL CONSTRAINT FK__archive__period FOREIGN KEY(period_id) REFERENCES period(id),
 	creation_date DATETIME NOT NULL,
-	last_update_date DATETIME NOT NULL,
+	last_modification_date DATETIME NOT NULL,
 	name NVARCHAR(255) NOT NULL,
 	description NVARCHAR(255) NOT NULL
 )
@@ -167,43 +175,71 @@ CREATE TABLE professor_school (
 )
 GO
 
-
-/*Edited by Gerald (check it) //////////////////////////*/
-
-
-
-CREATE TABLE registration_period (
-	id INT IDENTITY(1, 1) NOT NULL CONSTRAINT PK__registration_period PRIMARY KEY(id),
-	name VARCHAR(255) NOT NULL,
-	start_time DATE NOT NULL,
-	end_time DATE NOT NULL,
-	period_status BIT NOT NULL, /*Aqui seria manejarlo como 1 o 0, o crear una tabla de estado para este estado en especifico, ya que el estado es abierto o cerrado*/
-	academic_period_id CHAR(4) NOT NULL CONSTRAINT FK__academic_period__period FOREIGN KEY(academic_period_id) REFERENCES course(id),
-	CONSTRAINT CHK__registration_period__start_time__end_time CHECK(start_time < end_time)
-)
-GO
-
 CREATE TABLE evaluation (
 	id INT IDENTITY(1, 1) NOT NULL CONSTRAINT PK__evaluation PRIMARY KEY(id),
-	class_id INT NOT NULL FK__evaluation__class FOREIGN KEY REFERENCES class(id),
-	CONSTRAINT CHK__evaluation__percentage_check CHECK (SUM(SELECT Percentage FROM evaluation_category WHERE evaluation.id = evaluation_category.evaluation_id) <= 100)
+	class_id INT NOT NULL FK__evaluation__class FOREIGN KEY REFERENCES class(id)
 )
 GO
 
 CREATE TABLE evaluation_category (
 	id INT IDENTITY(1, 1) NOT NULL CONSTRAINT PK__evaluation_category PRIMARY KEY(id),
 	name VARCHAR(255) NOT NULL,
-	percentage INT NOT NULL, 
-	evaluation_id INT NOT NULL FK__evaluation_category__evaluation FOREIGN KEY(evaluation_id) REFERENCES evalutation(id)
-	CONSTRAINT CHK__evalutation_category__percentage_activity_check CHECK (SUM(SELECT Percentage FROM activity WHERE evaluation_category.id = activity.id) <= percentage)
-)
-GO 
-
-CREATE TABLE activity(
-	id IDENTITY(1, 1) NOT NULL CONSTRAINT PK__activity PRIMARY KEY(id),
-	name VARCHAR(255) NOT NULL,
-	due_date DATE NOT NULL,
-	activity_percentage INT NOT NULL
+	percentage INT NOT NULL CONSTRAINT CHK__evaluation_category__percentage CHECK(percentage > 0), 
+	evaluation_id INT NOT NULL FK__evaluation_category__evaluation FOREIGN KEY(evaluation_id) REFERENCES evalutation(id)	
 )
 GO
 
+CREATE TABLE activity (
+	id IDENTITY(1, 1) NOT NULL CONSTRAINT PK__activity PRIMARY KEY(id),
+	name VARCHAR(255) NOT NULL,
+	description TEXT NOT NULL,
+	due_date DATETIME NOT NULL,
+	percentage FLOAT NOT NULL CONSTRAINT CHK__activity__percentage CHECK(percentage > 0),
+	evaluation_category_id INT NOT NULL CONSTRAINT FK__activity__evaluation_category FOREIGN KEY(evaluation_category_id) REFERENCES evaluation_category(id),
+	archive_id INT CONSTRAINT FK__activity__archive FOREIGN KEY(archive_id) REFERENCES archive(id)
+)
+GO
+
+CREATE TABLE student_activity (
+	id INT IDENTITY(1, 1) NOT NULL CONSTRAINT PK__student_activity PRIMARY KEY(id),
+	activity_id INT NOT NULL CONSTRAINT FK__student_activity__activity FOREIGN KEY(activity_id) REFERENCES activity(id),
+	student_id VARCHAR(255) NOT NULL,
+	archive_id INT NOT NULL CONSTRAINT FK__student_activity__archive FOREIGN KEY(archive_id) REFERENCES archive(id),
+	upload_date DATETIME NOT NULL
+)
+GO
+
+CREATE TABLE student_activity_review (
+	id INT IDENTITY(1, 1) NOT NULL CONSTRAINT PK__student_activity_review PRIMARY KEY(id),
+	student_activity_id INT NOT NULL CONSTRAINT FK__professor_student_activity__student_activity FOREIGN KEY(student_activity_id) REFERENCES student_activity(id),
+	archive_id INT CONSTRAINT FK__professor_student_activity__archive FOREIGN KEY(archive_id) REFERENCES archive(id),
+	comment TEXT,
+	grade FLOAT NOT NULL CONSTRAINT CHK__student_activity_review__grade CHECK(grade >= 0)
+)
+GO
+
+CREATE TABLE student_period (
+	id INT IDENTITY(1, 1) NOT NULL CONSTRAINT PK__student_period PRIMARY KEY(id),
+	student_id VARCHAR(255) NOT NULL,
+	period_id INT NOT NULL CONSTRAINT FK__student_period__period FOREIGN KEY(period_id) REFERENCES period(id),
+	grade FLOAT NOT NULL CONSTRAINT CHK__student_period__grade CHECK(grade >= 0)
+)
+GO
+
+CREATE TABLE enrollment_period (
+	id INT IDENTITY(1, 1) NOT NULL CONSTRAINT PK__enrollment_period PRIMARY KEY(id),
+	name VARCHAR(255) NOT NULL,
+	start_time DATETIME NOT NULL,
+	end_time DATETIME NOT NULL,
+	is_open BIT(1) NOT NULL,
+	period_id INT NOT NULL CONSTRAINT FK__enrollment_period__period FOREIGN KEY(period_id) REFERENCES period(id)
+	CONSTRAINT CHK__enrollment_period__start_time__end_time CHECK(start_time < end_time)
+)
+GO
+
+CREATE TABLE student_enrollment_period (
+	id INT IDENTITY(1, 1) NOT NULL CONSTRAINT PK__student_enrollment_time PRIMARY KEY(id),
+	student_id VARCHAR(255) NOT NULL,
+	enrollment_period_id INT NOT NULL CONSTRAINT FK__student_enrollment_period__enrollment_period FOREIGN KEY(enrollment_period_id) REFERENCES enrollment_period(id)
+)
+GO
