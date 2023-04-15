@@ -84,8 +84,8 @@ GO
 CREATE TABLE curriculum_course_prerequisite (
 	id INT IDENTITY(1, 1) NOT NULL CONSTRAINT PK__curriculum_course_prerequisite PRIMARY KEY(id),
 	curriculum_id VARCHAR(4) NOT NULL CONSTRAINT FK__curriculum_course_prerequisite__curriculum FOREIGN KEY(curriculum_id) REFERENCES curriculum(id),
-	course_id CHAR(4) NOT NULL CONSTRAINT FK__curriculum_course_prerequisite__course_id__course FOREIGN KEY(course_id) REFERENCES course(id),
-	course_prerequisite_id CHAR(4) NOT NULL CONSTRAINT FK__curriculum_course_prerequisite__course_prerequisite_id__course FOREIGN KEY(course_prerequisite_id) REFERENCES course(id)
+	course_id CHAR(4) NOT NULL CONSTRAINT FK__curriculum_course_prerequisite__course FOREIGN KEY(course_id) REFERENCES course(id),
+	course_prerequisite_id CHAR(4) NOT NULL CONSTRAINT FK__curriculum_course_prerequisite__course FOREIGN KEY(course_prerequisite_id) REFERENCES course(id)
 )
 GO
 
@@ -101,7 +101,7 @@ GO
 CREATE TABLE student_class (
 	id INT IDENTITY(1, 1) NOT NULL CONSTRAINT PK__student_class PRIMARY KEY(id),
 	student_id VARCHAR(255) NOT NULL,
-	class_id INT NOT NULL CONSTRAINT FK__student_class__class FOREIGN KEY(class_id) REFERENCES class(id),
+	class_id INT NOT NULL CONSTRAINT FOREIGN KEY(class_id) REFERENCES class(id),
 	grade FLOAT NOT NULL CONSTRAINT CHK__student_class__grade CHECK(grade >= 0)
 )
 GO
@@ -149,14 +149,14 @@ GO
 
 CREATE TABLE career_archive (
 	id INT IDENTITY(1, 1) NOT NULL CONSTRAINT PK__career_archive PRIMARY KEY(id),
-	career_id INT NOT NULL CONSTRAINT FK__career_archive__career FOREIGN KEY(career_id) REFERENCES career(id),
+	career_id CHAR(4) NOT NULL CONSTRAINT FK__career_archive__career FOREIGN KEY(career_id) REFERENCES career(id),
 	archive_id INT NOT NULL CONSTRAINT FK__career_archive__archive FOREIGN KEY(archive_id) REFERENCES archive(id)
 )
 GO
 
 CREATE TABLE class_archive (
 	id INT IDENTITY(1, 1) NOT NULL CONSTRAINT PK__class_archive PRIMARY KEY(id),
-	class_id INT NOT NULL CONSTRAINT FK__class_archive__class FOREIGN KEY(class_id) REFERENCES class(id),
+	class_id CHAR(4) NOT NULL CONSTRAINT FK__class_archive__class FOREIGN KEY(class_id) REFERENCES class(id),
 	archive_id INT NOT NULL CONSTRAINT FK__class_archive__archive FOREIGN KEY(archive_id) REFERENCES archive(id)
 )
 GO
@@ -177,7 +177,7 @@ GO
 
 CREATE TABLE evaluation (
 	id INT IDENTITY(1, 1) NOT NULL CONSTRAINT PK__evaluation PRIMARY KEY(id),
-	class_id INT NOT NULL CONSTRAINT FK__evaluation__class FOREIGN KEY(class_id) REFERENCES class(id)
+	class_id INT NOT NULL FK__evaluation__class FOREIGN KEY REFERENCES class(id)
 )
 GO
 
@@ -185,12 +185,12 @@ CREATE TABLE evaluation_category (
 	id INT IDENTITY(1, 1) NOT NULL CONSTRAINT PK__evaluation_category PRIMARY KEY(id),
 	name VARCHAR(255) NOT NULL,
 	percentage INT NOT NULL CONSTRAINT CHK__evaluation_category__percentage CHECK(percentage > 0), 
-	evaluation_id INT NOT NULL CONSTRAINT FK__evaluation_category__evaluation FOREIGN KEY(evaluation_id) REFERENCES evaluation(id)	
+	evaluation_id INT NOT NULL FK__evaluation_category__evaluation FOREIGN KEY(evaluation_id) REFERENCES evalutation(id)	
 )
 GO
 
 CREATE TABLE activity (
-	id INT IDENTITY(1, 1) NOT NULL CONSTRAINT PK__activity PRIMARY KEY(id),
+	id IDENTITY(1, 1) NOT NULL CONSTRAINT PK__activity PRIMARY KEY(id),
 	name VARCHAR(255) NOT NULL,
 	description TEXT NOT NULL,
 	due_date DATETIME NOT NULL,
@@ -204,11 +204,17 @@ CREATE TABLE student_activity (
 	id INT IDENTITY(1, 1) NOT NULL CONSTRAINT PK__student_activity PRIMARY KEY(id),
 	activity_id INT NOT NULL CONSTRAINT FK__student_activity__activity FOREIGN KEY(activity_id) REFERENCES activity(id),
 	student_id VARCHAR(255) NOT NULL,
-	archive_id INT NOT NULL CONSTRAINT FK__student_activity__archive_id__archive FOREIGN KEY(archive_id) REFERENCES archive(id),
-	upload_date DATETIME NOT NULL,
-	professor_archive_id INT CONSTRAINT FK__student_activity__professor_archive_id__archive FOREIGN KEY(professor_archive_id) REFERENCES archive(id),
+	archive_id INT NOT NULL CONSTRAINT FK__student_activity__archive FOREIGN KEY(archive_id) REFERENCES archive(id),
+	upload_date DATETIME NOT NULL
+)
+GO
+
+CREATE TABLE student_activity_review (
+	id INT IDENTITY(1, 1) NOT NULL CONSTRAINT PK__student_activity_review PRIMARY KEY(id),
+	student_activity_id INT NOT NULL CONSTRAINT FK__professor_student_activity__student_activity FOREIGN KEY(student_activity_id) REFERENCES student_activity(id),
+	archive_id INT CONSTRAINT FK__professor_student_activity__archive FOREIGN KEY(archive_id) REFERENCES archive(id),
 	comment TEXT,
-	grade FLOAT CONSTRAINT CHK__student_activity_review__grade CHECK(grade >= 0)
+	grade FLOAT NOT NULL CONSTRAINT CHK__student_activity_review__grade CHECK(grade >= 0)
 )
 GO
 
@@ -216,7 +222,7 @@ CREATE TABLE student_period (
 	id INT IDENTITY(1, 1) NOT NULL CONSTRAINT PK__student_period PRIMARY KEY(id),
 	student_id VARCHAR(255) NOT NULL,
 	period_id INT NOT NULL CONSTRAINT FK__student_period__period FOREIGN KEY(period_id) REFERENCES period(id),
-	grade FLOAT CONSTRAINT CHK__student_period__grade CHECK(grade >= 0)
+	grade FLOAT NOT NULL CONSTRAINT CHK__student_period__grade CHECK(grade >= 0)
 )
 GO
 
@@ -225,8 +231,8 @@ CREATE TABLE enrollment_period (
 	name VARCHAR(255) NOT NULL,
 	start_time DATETIME NOT NULL,
 	end_time DATETIME NOT NULL,
-	is_open BIT NOT NULL,
-	period_id INT NOT NULL CONSTRAINT FK__enrollment_period__period FOREIGN KEY(period_id) REFERENCES period(id),
+	is_open BIT(1) NOT NULL,
+	period_id INT NOT NULL CONSTRAINT FK__enrollment_period__period FOREIGN KEY(period_id) REFERENCES period(id)
 	CONSTRAINT CHK__enrollment_period__start_time__end_time CHECK(start_time < end_time)
 )
 GO
@@ -235,13 +241,5 @@ CREATE TABLE student_enrollment_period (
 	id INT IDENTITY(1, 1) NOT NULL CONSTRAINT PK__student_enrollment_time PRIMARY KEY(id),
 	student_id VARCHAR(255) NOT NULL,
 	enrollment_period_id INT NOT NULL CONSTRAINT FK__student_enrollment_period__enrollment_period FOREIGN KEY(enrollment_period_id) REFERENCES enrollment_period(id)
-)
-GO
-
-CREATE TABLE student_waiting_enrollment (
-	id INT IDENTITY(1, 1) NOT NULL CONSTRAINT PK__ PRIMARY KEY(id),
-	student_id VARCHAR(255) NOT NULL,
-	enrollment_period_id INT NOT NULL CONSTRAINT FK__student_waiting_enrollment__enrollment_period FOREIGN KEY(enrollment_period_id) REFERENCES enrollment_period(id),
-	class_id INT NOT NULL CONSTRAINT FK__student_waiting_enrollment__class FOREIGN KEY(class_id) REFERENCES class(id)
 )
 GO
