@@ -16,4 +16,4 @@ WORKDIR /app
 COPY app/. .
 RUN pip3 install --no-cache-dir -r requirements.txt
 
-CMD [ "flask",  "--app", "app", "run", "--host=0.0.0.0" ]
+CMD [ "flask",  "--__init__", "__init__", "run", "--host=0.0.0.0" ]

@@ -1,0 +1,10 @@
+- [ ] Roles
+- [ ] Periodos lectivos
+- [ ] Escuelas
+- [ ] Cursos
+- [ ] Carreras
+- [ ] Planes
+- [ ] Grupos
+- [ ] Matricula
+- [ ] Actividades
+- [ ] Evaluacion curso/grupo (rating)
