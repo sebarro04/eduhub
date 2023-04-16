@@ -1,6 +1,8 @@
 from flask import Flask, Blueprint
+from period_flask import PERIOD_BLUERPRINT
 
 app = Flask(__name__)
+app.register_blueprint(PERIOD_BLUERPRINT)
 
 @app.route("/")
 def index():

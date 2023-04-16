@@ -10,13 +10,14 @@ CREATE TABLE period_status (
 )
 GO
 
+DROP TABLE period
 CREATE TABLE period (
 	id INT IDENTITY(1, 1) NOT NULL CONSTRAINT PK__period PRIMARY KEY(id),
 	period_type_id INT NOT NULL CONSTRAINT FK__period__period_type FOREIGN KEY(period_type_id) REFERENCES period_type(id),
-	start_time DATE NOT NULL,
-	end_time DATE NOT NULL,
+	start_date DATE NOT NULL,
+	end_date DATE NOT NULL,
 	period_status_id INT NOT NULL CONSTRAINT FK__period__period_status FOREIGN KEY(period_status_id) REFERENCES period_status(id),
-	CONSTRAINT CHK__period__start_time__end_time CHECK(start_time < end_time)
+	CONSTRAINT CHK__period__start_time__end_time CHECK(start_date < end_date)
 )
 GO
 

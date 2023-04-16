@@ -1,5 +1,5 @@
 - [ ] Roles
-- [ ] Periodos lectivos
+- [x] Periodos lectivos
 - [ ] Escuelas
 - [x] Cursos
 - [ ] Carreras
