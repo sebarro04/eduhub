@@ -28,7 +28,7 @@ def readAllPeriodTypes() -> list | Exception:
     except Exception as ex:
         return ex
 
-def createPeriod(periodTypeId: int, startDate: str, endDate, periodStatusId: int) -> bool | Exception:
+def createPeriod(periodTypeId: int, startDate: str, endDate: str, periodStatusId: int) -> bool | Exception:
     try:
         db = Database()
         query = '''
