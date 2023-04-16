@@ -4,7 +4,7 @@ import course
 COURSE_BLUERPRINT = Blueprint('COURSE_BLUERPRINT', __name__)
 
 @COURSE_BLUERPRINT.route('/thunkable/courses', methods = ['POST'])
-def createPeriod():
+def createCourse():
     json = request.json
     id = json['id']
     name = json['name']
@@ -22,7 +22,7 @@ def createPeriod():
     return response
 
 @COURSE_BLUERPRINT.route('/thunkable/courses', methods = ['GET'])
-def readAllPeriods():
+def readAllCourses():
     result = course.readAllCourses()
     response = jsonify(result)
     if isinstance(result, Exception):
@@ -32,7 +32,7 @@ def readAllPeriods():
     return response
 
 @COURSE_BLUERPRINT.route('/thunkable/courses/<id>', methods = ['PUT'])
-def updatePeriod(id):
+def updateCourse(id):
     json = request.json
     id = json[id]
     name = json['name']
@@ -50,7 +50,7 @@ def updatePeriod(id):
     return response
 
 @COURSE_BLUERPRINT.route('/thunkable/courses/<id>', methods = ['DELETE'])
-def deletePeriod(id):
+def deleteCourse(id):
     result = course.deleteCourse(id)
     response = jsonify(result)
     if isinstance(result, Exception):
