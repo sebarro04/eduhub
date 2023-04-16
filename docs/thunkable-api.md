@@ -1,8 +1,8 @@
 - [ ] Roles
 - [x] Periodos lectivos
 - [x] Escuelas
-- [ ] Cursos (Gerald)
-- [ ] Carreras (Gerald)
+- [x] Cursos (Gerald)
+- [ ] Carreras (Gerald) (In progress)
 - [ ] Planes (Gerald)
 - [ ] Grupos(Gerald)
 - [ ] Matricula (Gerald)

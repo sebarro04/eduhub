@@ -64,5 +64,4 @@ def deleteCourse(id: str) -> bool | Exception:
 if __name__ == '__main__':
     #Cursos en la base
     #createCourse("5821", "Requerimientos de Software", 2, 4, "IC", 4, "En este curso se introduce al estudiante en los procesos involucrados en obtener, analizar, especificar, validar y administrar requerimientos de software")
-    print(updateCourse("5822", "Prueba 2", 2, 4,"IC", 4, "Prueba 2"))
     print("Module name")
