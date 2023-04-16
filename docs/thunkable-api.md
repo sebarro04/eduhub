@@ -7,4 +7,4 @@
 - [ ] Grupos(Gerald)
 - [ ] Matricula (Gerald)
 - [ ] Actividades
-- [ ] Evaluacion curso/grupo (rating)
+- [x] Evaluacion curso/grupo (rating)
