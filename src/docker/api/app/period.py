@@ -88,4 +88,6 @@ def deletePeriod(id: int) -> bool | Exception:
         return str(ex)
 
 if __name__ == '__main__':
+    periods = readAllPeriodTypes()
+    print(periods)
     print('period module')

@@ -7,19 +7,19 @@ def createCourse(id: str, name: str, period_type_id: int, credits: int, school_i
                 INSERT INTO course (id, name, period_type_id, credits, school_id, class_hours_week, description)
                 VALUES (?, ?, ?, ?, ?, ?, ?)
                 '''
-        db.cursor.execute(id, name, period_type_id, credits, school_id, class_hours_week, description)
+        db.cursor.execute(query, id, name, period_type_id, credits, school_id, class_hours_week, description)
         db.cursor.commit()
         return True
     except Exception as ex:
-        return ex
+        return str(ex)
       
 def readAllCourses() -> list | Exception:
     try:
         db = Database()
         query = '''
-                SELECT course.id, course.name, period_type.name AS period_type, course.credits, school.id AS school_id, course.class_hours_week, course.description
+                SELECT course.id, course.name, period_type.name AS period_type, course.credits, school.name AS school, course.class_hours_week, course.description
                 FROM course 
-                INNER JOIN period_type ON period.period_type_id = period_type.id
+                INNER JOIN period_type ON course.period_type_id = period_type.id
                 INNER JOIN school ON course.school_id = school.id
                 '''
         db.cursor.execute(query)
@@ -30,34 +30,38 @@ def readAllCourses() -> list | Exception:
             jsonData.append(dict(zip(rowHeaders, row)))
         return jsonData
     except Exception as ex:
-        return ex
+        return str(ex)
     
-def updatePeriod(id: int, periodTypeId: int | None, startDate: str | None, endDate: str | None, periodStatusId: int | None) -> bool | Exception:
+def updateCourse(id: str, name: str | None, period_type_id: int | None, credits: int | None, school_id: str | None, class_hours_week: int | None, description: str | None) -> bool | Exception:
     try:
         db = Database()
         query = '''
-                UPDATE period
-                SET period_type_id = COALESCE(?, period_type_id),
-                    start_date = COALESCE(?, start_date),
-                    end_date = COALESCE(?, end_date),
-                    period_status_id = COALESCE(?, period_status_id)
+                UPDATE course
+                SET name = COALESCE(?, name),
+                    period_type_id = COALESCE(?, period_type_id),
+                    credits = COALESCE(?, credits),
+                    school_id = COALESCE(?, school_id),
+                    class_hours_week = COALESCE(?, class_hours_week),
+                    description = COALESCE(?, description)
                 WHERE id = ?
                 '''
-        db.cursor.execute(query, periodTypeId, startDate, endDate, periodStatusId, id)
+        db.cursor.execute(query, name, period_type_id, credits, school_id, class_hours_week, description, id)
         db.cursor.commit()
         return True
     except Exception as ex:
-        return ex
+        return str(ex)
     
-def deletePeriod(id: int) -> bool | Exception:
+def deleteCourse(id: str) -> bool | Exception:
     try:
         db = Database()
-        query = 'DELETE period WHERE id = ?'
+        query = 'DELETE course WHERE id = ?'
         db.cursor.execute(query, id)
         db.cursor.commit()
         return True
     except Exception as ex:
-        return ex
+        return str(ex)
 
 if __name__ == '__main__':
-    print('period module')
+    #Cursos en la base
+    #createCourse("5821", "Requerimientos de Software", 2, 4, "IC", 4, "En este curso se introduce al estudiante en los procesos involucrados en obtener, analizar, especificar, validar y administrar requerimientos de software")
+    print("Module name")
