@@ -240,9 +240,19 @@ CREATE TABLE student_enrollment_period (
 GO
 
 CREATE TABLE student_waiting_enrollment (
-	id INT IDENTITY(1, 1) NOT NULL CONSTRAINT PK__ PRIMARY KEY(id),
+	id INT IDENTITY(1, 1) NOT NULL CONSTRAINT PK__student_waiting_enrollment PRIMARY KEY(id),
 	student_id VARCHAR(255) NOT NULL,
 	enrollment_period_id INT NOT NULL CONSTRAINT FK__student_waiting_enrollment__enrollment_period FOREIGN KEY(enrollment_period_id) REFERENCES enrollment_period(id),
 	class_id INT NOT NULL CONSTRAINT FK__student_waiting_enrollment__class FOREIGN KEY(class_id) REFERENCES class(id)
+)
+GO
+
+CREATE TABLE class_rating (
+	id INT IDENTITY(1, 1) NOT NULL CONSTRAINT PK__class_rating PRIMARY KEY(id),
+	class_id INT NOT NULL CONSTRAINT FK__class_rating__class FOREIGN KEY(class_id) REFERENCES class(id),
+	difficulty INT NOT NULL CONSTRAINT CHK__class_rating__difficulty CHECK(difficulty BETWEEN 1 AND 10),
+	quality INT NOT NULL CONSTRAINT CHK__class_rating__quality CHECK(quality BETWEEN 1 AND 10),
+	overall_grade INT NOT NULL CONSTRAINT CHK__class_rating__overall_grade CHECK(overall_grade BETWEEN 1 AND 10),
+	comment TEXT
 )
 GO
