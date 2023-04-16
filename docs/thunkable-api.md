@@ -1,6 +1,6 @@
 - [ ] Roles
 - [x] Periodos lectivos
-- [ ] Escuelas
+- [x] Escuelas
 - [ ] Cursos (Gerald)
 - [ ] Carreras (Gerald)
 - [ ] Planes (Gerald)
