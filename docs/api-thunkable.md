@@ -1,7 +1,7 @@
 - [ ] Roles
 - [ ] Periodos lectivos
 - [ ] Escuelas
-- [ ] Cursos
+- [x] Cursos
 - [ ] Carreras
 - [ ] Planes
 - [ ] Grupos
