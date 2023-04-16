@@ -1,10 +1,10 @@
 - [ ] Roles
 - [ ] Periodos lectivos
 - [ ] Escuelas
-- [x] Cursos
-- [ ] Carreras
-- [ ] Planes
-- [ ] Grupos
-- [ ] Matricula
+- [ ] Cursos (Gerald)
+- [ ] Carreras (Gerald)
+- [ ] Planes (Gerald)
+- [ ] Grupos(Gerald)
+- [ ] Matricula (Gerald)
 - [ ] Actividades
 - [ ] Evaluacion curso/grupo (rating)
