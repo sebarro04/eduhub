@@ -34,7 +34,6 @@ def readAllCourses():
 @COURSE_BLUERPRINT.route('/thunkable/courses/<id>', methods = ['PUT'])
 def updateCourse(id):
     json = request.json
-    id = json[id]
     name = json['name']
     periodTypeId = json['period_type_id']
     credits = json['credits']
