@@ -4,6 +4,6 @@
 - [x] Carreras (Gerald) 
 - [ ] Planes (Gerald) (In progress)
 - [ ] Grupos(Gerald) 
-- [ ] Matricula (Gerald)
-- [ ] Actividades
+- [ ] Matricula (Sebarro)
+- [ ] Actividades (Sebarro)
 - [x] Evaluacion curso/grupo (rating)
