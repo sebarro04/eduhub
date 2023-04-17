@@ -4,7 +4,7 @@
 - [x] Cursos (Gerald)
 - [x] Carreras (Gerald) 
 - [ ] Planes (Gerald) (In progress)
-- [ ] Grupos(Gerald)
+- [ ] Grupos(Gerald) 
 - [ ] Matricula (Gerald)
 - [ ] Actividades
 - [x] Evaluacion curso/grupo (rating)
