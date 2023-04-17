@@ -1,4 +1,3 @@
-- [ ] Roles
 - [x] Periodos lectivos
 - [x] Escuelas
 - [x] Cursos (Gerald)
