@@ -48,7 +48,7 @@ def updateCurriculum(id):
     creationDate = json['creation_date']
     activationDate = json['activation_date']
     finishDate = json['finish_date']
-    result = curriculum.updateCurriculum(id, curriculumStatusId, careerId, creationDate, activationDate, finishDate)
+    result = curriculum.updateCurriculum(str(id), curriculumStatusId, careerId, creationDate, activationDate, finishDate)
     response = jsonify(result)
     if isinstance(result, Exception):
         response.status_code = 500
