@@ -2,8 +2,8 @@
 - [x] Periodos lectivos
 - [x] Escuelas
 - [x] Cursos (Gerald)
-- [ ] Carreras (Gerald) (In progress)
-- [ ] Planes (Gerald)
+- [x] Carreras (Gerald) 
+- [ ] Planes (Gerald) (In progress)
 - [ ] Grupos(Gerald)
 - [ ] Matricula (Gerald)
 - [ ] Actividades
