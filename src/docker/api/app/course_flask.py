@@ -3,7 +3,7 @@ import course
 
 COURSE_BLUERPRINT = Blueprint('COURSE_BLUERPRINT', __name__)
 
-@COURSE_BLUERPRINT.route('/thunkable/courses', methods = ['POST'])
+@COURSE_BLUERPRINT.route('/eduhub/courses', methods = ['POST'])
 def createCourse():
     json = request.json
     id = json['id']
@@ -13,25 +13,23 @@ def createCourse():
     schoolId = json['school_id']
     classHoursWeek = json['class_hours_week']
     description = json['description']
-    result = course.createCourse(id, name, periodTypeId, credits, schoolId, classHoursWeek, description)
-    response = jsonify(result)
+    result = course.createCourse(id, name, periodTypeId, credits, schoolId, classHoursWeek, description)    
     if isinstance(result, Exception):
-        response.status_code = 500
-        return response
+        return 'Error with the database', 500 
+    response = jsonify(result)
     response.status_code = 200
     return response
 
-@COURSE_BLUERPRINT.route('/thunkable/courses', methods = ['GET'])
+@COURSE_BLUERPRINT.route('/eduhub/courses', methods = ['GET'])
 def readAllCourses():
-    result = course.readAllCourses()
-    response = jsonify(result)
+    result = course.readAllCourses()    
     if isinstance(result, Exception):
-        response.status_code = 500
-        return response    
+        return 'Error with the database', 500   
+    response = jsonify(result)  
     response.status_code = 200
     return response
 
-@COURSE_BLUERPRINT.route('/thunkable/courses/<id>', methods = ['PUT'])
+@COURSE_BLUERPRINT.route('/eduhub/courses/<id>', methods = ['PUT'])
 def updateCourse(id):
     json = request.json
     name = json['name']
@@ -40,20 +38,18 @@ def updateCourse(id):
     schoolId = json['school_id']
     classHoursWeek = json['class_hours_week']
     description = json['description']
-    result = course.updateCourse(id, name, periodTypeId, credits, schoolId, classHoursWeek, description)
-    response = jsonify(result)
+    result = course.updateCourse(id, name, periodTypeId, credits, schoolId, classHoursWeek, description)    
     if isinstance(result, Exception):
-        response.status_code = 500
-        return response
+        return 'Error with the database', 500 
+    response = jsonify(result)
     response.status_code = 200
     return response
 
-@COURSE_BLUERPRINT.route('/thunkable/courses/<id>', methods = ['DELETE'])
+@COURSE_BLUERPRINT.route('/eduhub/courses/<id>', methods = ['DELETE'])
 def deleteCourse(id):
-    result = course.deleteCourse(id)
-    response = jsonify(result)
+    result = course.deleteCourse(id)    
     if isinstance(result, Exception):
-        response.status_code = 500
-        return response
+        return 'Error with the database', 500
+    response = jsonify(result)
     response.status_code = 200
     return response

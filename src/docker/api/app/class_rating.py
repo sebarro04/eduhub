@@ -11,7 +11,8 @@ def createClassRating(classId: int, difficulty: int, quality: int, overallGrade:
         db.cursor.commit()
         return True
     except Exception as ex:
-        return str(ex)
+        print(ex)
+        return ex
     
 def readAllClassesRatings() -> list | Exception:
     try:
@@ -31,7 +32,8 @@ def readAllClassesRatings() -> list | Exception:
             jsonData.append(dict(zip(rowHeaders, row)))
         return jsonData
     except Exception as ex:
-        return str(ex)
+        print(ex)
+        return ex
     
 def readAllClassRatings(courseId: str, professorId: str) -> list | Exception:
     try:
@@ -52,7 +54,8 @@ def readAllClassRatings(courseId: str, professorId: str) -> list | Exception:
             jsonData.append(dict(zip(rowHeaders, row)))
         return jsonData
     except Exception as ex:
-        return str(ex)
+        print(ex)
+        return ex
     
 if __name__ == '__main__':
     print('class_rating module')

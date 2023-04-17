@@ -1,4 +1,4 @@
-from flask import Flask, Blueprint
+from flask import Flask
 from period_flask import PERIOD_BLUERPRINT
 from school_flask import SCHOOL_BLUERPRINT
 from course_flask import COURSE_BLUERPRINT

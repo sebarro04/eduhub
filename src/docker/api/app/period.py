@@ -12,7 +12,8 @@ def readAllPeriodStatuses() -> list | Exception:
             jsonData.append(dict(zip(rowHeaders, row)))
         return jsonData
     except Exception as ex:
-        return str(ex)
+        print(ex)
+        return ex
     
 def readAllPeriodTypes() -> list | Exception:
     try:
@@ -26,7 +27,8 @@ def readAllPeriodTypes() -> list | Exception:
             jsonData.append(dict(zip(rowHeaders, row)))
         return jsonData
     except Exception as ex:
-        return str(ex)
+        print(ex)
+        return ex
 
 def createPeriod(periodTypeId: int, startDate: str, endDate: str, periodStatusId: int) -> bool | Exception:
     try:
@@ -39,7 +41,8 @@ def createPeriod(periodTypeId: int, startDate: str, endDate: str, periodStatusId
         db.cursor.commit()
         return True
     except Exception as ex:
-        return str(ex)
+        print(ex)
+        return ex
     
 def readAllPeriods() -> list | Exception:
     try:
@@ -58,7 +61,8 @@ def readAllPeriods() -> list | Exception:
             jsonData.append(dict(zip(rowHeaders, row)))
         return jsonData
     except Exception as ex:
-        return str(ex)
+        print(ex)
+        return ex
     
 def updatePeriod(id: int, periodTypeId: int | None, startDate: str | None, endDate: str | None, periodStatusId: int | None) -> bool | Exception:
     try:
@@ -75,7 +79,8 @@ def updatePeriod(id: int, periodTypeId: int | None, startDate: str | None, endDa
         db.cursor.commit()
         return True
     except Exception as ex:
-        return str(ex)
+        print(ex)
+        return ex
     
 def deletePeriod(id: int) -> bool | Exception:
     try:
@@ -85,7 +90,8 @@ def deletePeriod(id: int) -> bool | Exception:
         db.cursor.commit()
         return True
     except Exception as ex:
-        return str(ex)
+        print(ex)
+        return ex
 
 if __name__ == '__main__':
     periods = readAllPeriodTypes()

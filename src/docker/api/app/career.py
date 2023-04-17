@@ -11,7 +11,8 @@ def createCareer(name: str, school_id: str, description: str) -> bool | Exceptio
         db.cursor.commit()
         return True
     except Exception as ex:
-        return str(ex)    
+        print(ex)
+        return ex    
 
 def readAllCareers() -> list | Exception:
     try:
@@ -29,7 +30,8 @@ def readAllCareers() -> list | Exception:
             jsonData.append(dict(zip(rowHeaders, row)))
         return jsonData
     except Exception as ex:
-        return str(ex)    
+        print(ex)
+        return ex    
 
 def updateCareer(id: int, name: str | None, school_id: str | None, description: str | None) -> bool | Exception:
     try:
@@ -45,7 +47,8 @@ def updateCareer(id: int, name: str | None, school_id: str | None, description: 
         db.cursor.commit()
         return True
     except Exception as ex:
-        return str(ex)
+        print(ex)
+        return ex
     
 def deleteCareer(id: int) -> bool | Exception:
     try:
@@ -55,7 +58,8 @@ def deleteCareer(id: int) -> bool | Exception:
         db.cursor.commit()
         return True
     except Exception as ex:
-        return str(ex)
+        print(ex)
+        return ex
 
 if __name__ == '__main__':
     print(readAllCareers())

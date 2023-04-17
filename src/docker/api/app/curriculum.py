@@ -11,7 +11,8 @@ def createCurriculum(id: str, curriculumStatusId: int, careerId: int, creationDa
         db.cursor.commit()
         return True
     except Exception as ex:
-        return str(ex)
+        print(ex)
+        return ex
 
 def readAllCurriculums() -> list | Exception:
     try:
@@ -30,7 +31,8 @@ def readAllCurriculums() -> list | Exception:
             jsonData.append(dict(zip(rowHeaders, row)))
         return jsonData
     except Exception as ex:
-        return str(ex)
+        print(ex)
+        return ex
 
 def updateCurriculum(id: str, curriculumStatusId: int | None, careerId: int | None, creationDate: str | None, activationDate: str | None, finishDate: str | None) -> bool | Exception:
     try:
@@ -48,7 +50,8 @@ def updateCurriculum(id: str, curriculumStatusId: int | None, careerId: int | No
         db.cursor.commit()
         return True
     except Exception as ex:
-        return str(ex)
+        print(ex)
+        return ex
     
 def deleteCurriculum(id: str) -> bool | Exception:
     try:
@@ -58,7 +61,8 @@ def deleteCurriculum(id: str) -> bool | Exception:
         db.cursor.commit()
         return True
     except Exception as ex:
-        return str(ex)
+        print(ex)
+        return ex
     
 def readAllCurriculumStatuses() -> list | Exception:
     try:
@@ -72,9 +76,10 @@ def readAllCurriculumStatuses() -> list | Exception:
             jsonData.append(dict(zip(rowHeaders, row)))
         return jsonData
     except Exception as ex:
-        return str(ex)
+        print(ex)
+        return ex
 
 if __name__ == '__main__':
     #print(createCurriculum("2004", 2, 1, "2023/04/25", "2023/04/27", "2023/04/29"))
-    print(readAllCurriculumStatus())
+    print(readAllCurriculumStatuses())
     print('period module')

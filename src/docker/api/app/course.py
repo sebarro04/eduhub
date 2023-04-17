@@ -11,7 +11,8 @@ def createCourse(id: str, name: str, period_type_id: int, credits: int, school_i
         db.cursor.commit()
         return True
     except Exception as ex:
-        return str(ex)
+        print(ex)
+        return ex
       
 def readAllCourses() -> list | Exception:
     try:
@@ -30,7 +31,8 @@ def readAllCourses() -> list | Exception:
             jsonData.append(dict(zip(rowHeaders, row)))
         return jsonData
     except Exception as ex:
-        return str(ex)
+        print(ex)
+        return ex
     
 def updateCourse(id: str, name: str | None, period_type_id: int | None, credits: int | None, school_id: str | None, class_hours_week: int | None, description: str | None) -> bool | Exception:
     try:
@@ -49,7 +51,8 @@ def updateCourse(id: str, name: str | None, period_type_id: int | None, credits:
         db.cursor.commit()
         return True
     except Exception as ex:
-        return str(ex)
+        print(ex)
+        return ex
     
 def deleteCourse(id: str) -> bool | Exception:
     try:
@@ -59,7 +62,8 @@ def deleteCourse(id: str) -> bool | Exception:
         db.cursor.commit()
         return True
     except Exception as ex:
-        return str(ex)
+        print(ex)
+        return ex
 
 if __name__ == '__main__':
     #Cursos en la base
