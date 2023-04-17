@@ -36,17 +36,27 @@ def updateCareer(id: int, name: str | None, school_id: str | None, description: 
         db = Database()
         query = '''
                 UPDATE career 
-                SET name = COALESCE(?, name)
-                    school_id = COALESCE(?, school_id)
+                SET name = COALESCE(?, name),
+                    school_id = COALESCE(?, school_id),
                     description = COALESCE(?, description)
                 WHERE id = ?
-                '''
-        db.cursor.execute(query, (id, name, school_id, description))
+                '''  
+        db.cursor.execute(query, (name, school_id, description, id))
         db.cursor.commit()
         return True
     except Exception as ex:
-        return str(ex) 
+        return str(ex)
+    
+def deleteCareer(id: int) -> bool | Exception:
+    try:
+        db = Database()
+        query = 'DELETE career WHERE id = ?'
+        db.cursor.execute(query, id)
+        db.cursor.commit()
+        return True
+    except Exception as ex:
+        return str(ex)
 
 if __name__ == '__main__':
-    print(updateCareer(2, "Prueba", "IC", "Descripción de prueba"))
+    print(readAllCareers())
     print("Module name")
