@@ -18,7 +18,7 @@ def read_all_careers() -> list | Exception:
     try:
         db = Database()
         query = '''
-                SELECT career.id, career.name, school.name as school_name, career.description
+                SELECT career.id, career.name, school.name AS school_name, career.description
                 FROM career
                 INNER JOIN school ON career.school_id = school.id
                 '''
