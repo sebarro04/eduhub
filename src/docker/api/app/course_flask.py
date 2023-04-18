@@ -4,16 +4,16 @@ import course
 COURSE_BLUERPRINT = Blueprint('COURSE_BLUERPRINT', __name__)
 
 @COURSE_BLUERPRINT.route('/eduhub/courses', methods = ['POST'])
-def createCourse():
+def create_course():
     json = request.json
     id = json['id']
     name = json['name']
-    periodTypeId = json['period_type_id']
+    period_type_id = json['period_type_id']
     credits = json['credits']
-    schoolId = json['school_id']
-    classHoursWeek = json['class_hours_week']
+    school_id = json['school_id']
+    class_hours_week = json['class_hours_week']
     description = json['description']
-    result = course.createCourse(id, name, periodTypeId, credits, schoolId, classHoursWeek, description)    
+    result = course.create_course(id, name, period_type_id, credits, school_id, class_hours_week, description)    
     if isinstance(result, Exception):
         return 'Error with the database', 500 
     response = jsonify(result)
@@ -21,8 +21,8 @@ def createCourse():
     return response
 
 @COURSE_BLUERPRINT.route('/eduhub/courses', methods = ['GET'])
-def readAllCourses():
-    result = course.readAllCourses()    
+def read_all_courses():
+    result = course.read_all_courses()    
     if isinstance(result, Exception):
         return 'Error with the database', 500   
     response = jsonify(result)  
@@ -30,15 +30,15 @@ def readAllCourses():
     return response
 
 @COURSE_BLUERPRINT.route('/eduhub/courses/<id>', methods = ['PUT'])
-def updateCourse(id):
+def update_course(id):
     json = request.json
     name = json['name']
-    periodTypeId = json['period_type_id']
+    period_type_id = json['period_type_id']
     credits = json['credits']
-    schoolId = json['school_id']
-    classHoursWeek = json['class_hours_week']
+    school_id = json['school_id']
+    class_hours_week = json['class_hours_week']
     description = json['description']
-    result = course.updateCourse(id, name, periodTypeId, credits, schoolId, classHoursWeek, description)    
+    result = course.update_course(id, name, period_type_id, credits, school_id, class_hours_week, description)    
     if isinstance(result, Exception):
         return 'Error with the database', 500 
     response = jsonify(result)
@@ -46,8 +46,8 @@ def updateCourse(id):
     return response
 
 @COURSE_BLUERPRINT.route('/eduhub/courses/<id>', methods = ['DELETE'])
-def deleteCourse(id):
-    result = course.deleteCourse(id)    
+def delete_course(id):
+    result = course.delete_course(id)    
     if isinstance(result, Exception):
         return 'Error with the database', 500
     response = jsonify(result)

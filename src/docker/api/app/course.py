@@ -1,6 +1,6 @@
 from Database import Database
 
-def createCourse(id: str, name: str, period_type_id: int, credits: int, school_id: str, class_hours_week: int, description: str) -> bool | Exception:
+def create_course(id: str, name: str, period_type_id: int, credits: int, school_id: str, class_hours_week: int, description: str) -> bool | Exception:
     try:
         db = Database()
         query = '''
@@ -14,7 +14,7 @@ def createCourse(id: str, name: str, period_type_id: int, credits: int, school_i
         print(ex)
         return ex
       
-def readAllCourses() -> list | Exception:
+def read_all_courses() -> list | Exception:
     try:
         db = Database()
         query = '''
@@ -24,17 +24,17 @@ def readAllCourses() -> list | Exception:
                 INNER JOIN school ON course.school_id = school.id
                 '''
         db.cursor.execute(query)
-        rowHeaders = [x[0] for x in db.cursor.description]
+        row_headers = [x[0] for x in db.cursor.description]
         result = db.cursor.fetchall()
-        jsonData = []
+        json_data = []
         for row in result:
-            jsonData.append(dict(zip(rowHeaders, row)))
-        return jsonData
+            json_data.append(dict(zip(row_headers, row)))
+        return json_data
     except Exception as ex:
         print(ex)
         return ex
     
-def updateCourse(id: str, name: str | None, period_type_id: int | None, credits: int | None, school_id: str | None, class_hours_week: int | None, description: str | None) -> bool | Exception:
+def update_course(id: str, name: str | None, period_type_id: int | None, credits: int | None, school_id: str | None, class_hours_week: int | None, description: str | None) -> bool | Exception:
     try:
         db = Database()
         query = '''
@@ -54,7 +54,7 @@ def updateCourse(id: str, name: str | None, period_type_id: int | None, credits:
         print(ex)
         return ex
     
-def deleteCourse(id: str) -> bool | Exception:
+def delete_course(id: str) -> bool | Exception:
     try:
         db = Database()
         query = 'DELETE course WHERE id = ?'
@@ -68,4 +68,4 @@ def deleteCourse(id: str) -> bool | Exception:
 if __name__ == '__main__':
     #Cursos en la base
     #createCourse("5821", "Requerimientos de Software", 2, 4, "IC", 4, "En este curso se introduce al estudiante en los procesos involucrados en obtener, analizar, especificar, validar y administrar requerimientos de software")
-    print("Module name")
+    print("course name")

@@ -1,20 +1,20 @@
 from Database import Database
 
-def createClassRating(classId: int, difficulty: int, quality: int, overallGrade: int, comment: str | None) -> bool | Exception:
+def create_class_rating(class_id: int, difficulty: int, quality: int, overall_grade: int, comment: str | None) -> bool | Exception:
     try:
         db = Database()
         query = '''
                 INSERT INTO class_rating (class_id, difficulty, quality, overall_grade, comment) 
                 VALUES (?, ?, ?, ?, ?)
                 '''
-        db.cursor.execute(query, classId, difficulty, quality, overallGrade, comment)
+        db.cursor.execute(query, class_id, difficulty, quality, overall_grade, comment)
         db.cursor.commit()
         return True
     except Exception as ex:
         print(ex)
         return ex
     
-def readAllClassesRatings() -> list | Exception:
+def read_all_classes_ratings() -> list | Exception:
     try:
         db = Database()
         query = '''
@@ -25,17 +25,17 @@ def readAllClassesRatings() -> list | Exception:
                 ORDER BY course.name, class.professor_id
                 '''
         db.cursor.execute(query)
-        rowHeaders = [x[0] for x in db.cursor.description]
+        row_headers = [x[0] for x in db.cursor.description]
         result = db.cursor.fetchall()
-        jsonData = []
+        json_data = []
         for row in result:
-            jsonData.append(dict(zip(rowHeaders, row)))
-        return jsonData
+            json_data.append(dict(zip(row_headers, row)))
+        return json_data
     except Exception as ex:
         print(ex)
         return ex
     
-def readAllClassRatings(courseId: str, professorId: str) -> list | Exception:
+def read_all_class_ratings(course_id: str, professor_id: str) -> list | Exception:
     try:
         db = Database()
         query = '''
@@ -44,15 +44,15 @@ def readAllClassRatings(courseId: str, professorId: str) -> list | Exception:
                 INNER JOIN class ON class_rating.class_id = class.id
                 INNER JOIN course ON class.course_id = course.id
                 WHERE course.id = ?
-                AND class.professor_id = ?
+                ABD class.professor_id = ?
                 '''
-        db.cursor.execute(query, courseId, professorId)
-        rowHeaders = [x[0] for x in db.cursor.description]
+        db.cursor.execute(query, course_id, professor_id)
+        row_headers = [x[0] for x in db.cursor.description]
         result = db.cursor.fetchall()
-        jsonData = []
+        json_data = []
         for row in result:
-            jsonData.append(dict(zip(rowHeaders, row)))
-        return jsonData
+            json_data.append(dict(zip(row_headers, row)))
+        return json_data
     except Exception as ex:
         print(ex)
         return ex

@@ -1,50 +1,50 @@
 from Database import Database
 
-def readAllPeriodStatuses() -> list | Exception:
+def read_all_period_statuses() -> list | Exception:
     try:
         db = Database()
         query = 'SELECT id, name FROM period_status'
         db.cursor.execute(query)
-        rowHeaders = [x[0] for x in db.cursor.description]
+        row_headers = [x[0] for x in db.cursor.description]
         result = db.cursor.fetchall()
-        jsonData = []
+        json_data = []
         for row in result:
-            jsonData.append(dict(zip(rowHeaders, row)))
-        return jsonData
+            json_data.append(dict(zip(row_headers, row)))
+        return json_data
     except Exception as ex:
         print(ex)
         return ex
     
-def readAllPeriodTypes() -> list | Exception:
+def read_all_period_types() -> list | Exception:
     try:
         db = Database()
         query = 'SELECT id, name FROM period_type ORDER BY id'
         db.cursor.execute(query)
-        rowHeaders = [x[0] for x in db.cursor.description]
+        row_headers = [x[0] for x in db.cursor.description]
         result = db.cursor.fetchall()
-        jsonData = []
+        json_data = []
         for row in result:
-            jsonData.append(dict(zip(rowHeaders, row)))
-        return jsonData
+            json_data.append(dict(zip(row_headers, row)))
+        return json_data
     except Exception as ex:
         print(ex)
         return ex
 
-def createPeriod(periodTypeId: int, startDate: str, endDate: str, periodStatusId: int) -> bool | Exception:
+def create_period(period_type_id: int, start_date: str, end_date: str, period_status_id: int) -> bool | Exception:
     try:
         db = Database()
         query = '''
                 INSERT INTO period (period_type_id, start_date, end_date, period_status_id)
                 VALUES (?, ?, ?, ?)
                 '''
-        db.cursor.execute(query, periodTypeId, startDate, endDate, periodStatusId)
+        db.cursor.execute(query, period_type_id, start_date, end_date, period_status_id)
         db.cursor.commit()
         return True
     except Exception as ex:
         print(ex)
         return ex
     
-def readAllPeriods() -> list | Exception:
+def read_all_periods() -> list | Exception:
     try:
         db = Database()
         query = '''
@@ -54,17 +54,17 @@ def readAllPeriods() -> list | Exception:
                 INNER JOIN period_status ON period.period_status_id = period_status.id
                 '''
         db.cursor.execute(query)
-        rowHeaders = [x[0] for x in db.cursor.description]
+        row_headers = [x[0] for x in db.cursor.description]
         result = db.cursor.fetchall()
-        jsonData = []
+        json_data = []
         for row in result:
-            jsonData.append(dict(zip(rowHeaders, row)))
-        return jsonData
+            json_data.append(dict(zip(row_headers, row)))
+        return json_data
     except Exception as ex:
         print(ex)
         return ex
     
-def updatePeriod(id: int, periodTypeId: int | None, startDate: str | None, endDate: str | None, periodStatusId: int | None) -> bool | Exception:
+def update_period(id: int, period_type_id: int | None, start_date: str | None, end_date: str | None, period_status_id: int | None) -> bool | Exception:
     try:
         db = Database()
         query = '''
@@ -75,14 +75,14 @@ def updatePeriod(id: int, periodTypeId: int | None, startDate: str | None, endDa
                     period_status_id = COALESCE(?, period_status_id)
                 WHERE id = ?
                 '''
-        db.cursor.execute(query, periodTypeId, startDate, endDate, periodStatusId, id)
+        db.cursor.execute(query, period_type_id, start_date, end_date, period_status_id, id)
         db.cursor.commit()
         return True
     except Exception as ex:
         print(ex)
         return ex
     
-def deletePeriod(id: int) -> bool | Exception:
+def delete_period(id: int) -> bool | Exception:
     try:
         db = Database()
         query = 'DELETE period WHERE id = ?'
@@ -94,6 +94,6 @@ def deletePeriod(id: int) -> bool | Exception:
         return ex
 
 if __name__ == '__main__':
-    periods = readAllPeriodTypes()
+    periods = read_all_period_types()
     print(periods)
     print('period module')

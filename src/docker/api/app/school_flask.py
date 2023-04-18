@@ -4,14 +4,14 @@ import school
 SCHOOL_BLUERPRINT = Blueprint('SCHOOL_BLUERPRINT', __name__)
 
 @SCHOOL_BLUERPRINT.route('/eduhub/schools', methods = ['POST'])
-def createSchool():
+def create_school():
     json = request.json
     id = json['id']
     name = json['name']
     email = json['email']
-    phoneNumber = json['phone_number']
-    directorId = json['director_id']
-    result = school.createSchool(id, name, email, phoneNumber, directorId)    
+    phone_number = json['phone_number']
+    director_id = json['director_id']
+    result = school.create_school(id, name, email, phone_number, director_id)    
     if isinstance(result, Exception):
         return 'Error with the database', 500
     response = jsonify(result)
@@ -19,8 +19,8 @@ def createSchool():
     return response
 
 @SCHOOL_BLUERPRINT.route('/eduhub/schools', methods = ['GET'])
-def readAllSchools():
-    result = school.readAllSchools()    
+def read_all_schools():
+    result = school.read_all_schools()    
     if isinstance(result, Exception):
         return 'Error with the database', 500   
     response = jsonify(result)
@@ -32,9 +32,9 @@ def updateSchool(id):
     json = request.json
     name = json['name']
     email = json['email']
-    phoneNumber = json['phone_number']
-    directorId = json['director_id']
-    result = school.updateSchool(id, name, email, phoneNumber, directorId)    
+    phone_number = json['phone_number']
+    director_id = json['director_id']
+    result = school.update_school(id, name, email, phone_number, director_id)    
     if isinstance(result, Exception):
         return 'Error with the database', 500
     response = jsonify(result)
@@ -42,8 +42,8 @@ def updateSchool(id):
     return response
 
 @SCHOOL_BLUERPRINT.route('/eduhub/schools/<id>', methods = ['DELETE'])
-def deleteSchool(id):
-    result = school.deleteSchool(id)    
+def delete_school(id):
+    result = school.delete_school(id)    
     if isinstance(result, Exception):
         return 'Error with the database', 500
     response = jsonify(result)

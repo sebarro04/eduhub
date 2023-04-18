@@ -4,8 +4,8 @@ import curriculum
 CURRICULUM_BLUEPRINT = Blueprint('CURRICULUM_BLUEPRINT', __name__)
 
 @CURRICULUM_BLUEPRINT.route('/eduhub/curriculum-statuses', methods = ['GET'])
-def readAllCurriculumStatuses():
-    result = curriculum.readAllCurriculumStatuses()    
+def read_all_curriculum_statuses():
+    result = curriculum.read_all_curriculum_statuses()    
     if isinstance(result, Exception):
         return 'Error with the database', 500
     response = jsonify(result)
@@ -16,12 +16,12 @@ def readAllCurriculumStatuses():
 def createCurriculum():
     json = request.json
     id = json['id']
-    curriculumStatusId = json['curriculum_status_id']
-    careerId = json['career_id']
-    creationDate = json['creation_date']
-    activationDate = json['activation_date']
-    finishDate = json['finish_date']
-    result = curriculum.createCurriculum(id, curriculumStatusId, careerId, creationDate, activationDate, finishDate)    
+    curriculum_status_id = json['curriculum_status_id']
+    career_id = json['career_id']
+    creation_date = json['creation_date']
+    activation_date = json['activation_date']
+    finish_date = json['finish_date']
+    result = curriculum.create_curriculum(id, curriculum_status_id, career_id, creation_date, activation_date, finish_date)    
     if isinstance(result, Exception):
         return 'Error with the database', 500
     response = jsonify(result)
@@ -29,8 +29,8 @@ def createCurriculum():
     return response
 
 @CURRICULUM_BLUEPRINT.route('/eduhub/curriculums', methods = ['GET'])
-def readAllCurriculums():
-    result = curriculum.readAllCurriculums()    
+def read_all_curriculums():
+    result = curriculum.read_all_curriculums()    
     if isinstance(result, Exception):
         return 'Error with the database', 500   
     response = jsonify(result)
@@ -38,14 +38,14 @@ def readAllCurriculums():
     return response
 
 @CURRICULUM_BLUEPRINT.route('/eduhub/curriculums/<string:id>', methods = ['PUT'])
-def updateCurriculum(id):
+def update_curriculum(id):
     json = request.json
-    curriculumStatusId = json['curriculum_status_id']
-    careerId = json['career_id']
-    creationDate = json['creation_date']
-    activationDate = json['activation_date']
-    finishDate = json['finish_date']
-    result = curriculum.updateCurriculum(id, curriculumStatusId, careerId, creationDate, activationDate, finishDate)    
+    curriculum_status_id = json['curriculum_status_id']
+    career_id = json['career_id']
+    creation_date = json['creation_date']
+    activation_date = json['activation_date']
+    finish_date = json['finish_date']
+    result = curriculum.update_curriculum(id, curriculum_status_id, career_id, creation_date, activation_date, finish_date)    
     if isinstance(result, Exception):
         return 'Error with the database', 500
     response = jsonify(result)

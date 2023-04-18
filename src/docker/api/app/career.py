@@ -1,6 +1,6 @@
 from Database import Database
 
-def createCareer(name: str, school_id: str, description: str) -> bool | Exception:
+def create_career(name: str, school_id: str, description: str) -> bool | Exception:
     try:
         db = Database()
         query = '''
@@ -14,26 +14,26 @@ def createCareer(name: str, school_id: str, description: str) -> bool | Exceptio
         print(ex)
         return ex    
 
-def readAllCareers() -> list | Exception:
+def read_all_careers() -> list | Exception:
     try:
         db = Database()
         query = '''
-                SELECT career.id, career.name, school.name AS schoolName, career.description
+                SELECT career.id, career.name, school.name as school_name, career.description
                 FROM career
                 INNER JOIN school ON career.school_id = school.id
                 '''
         db.cursor.execute(query)
-        rowHeaders = [x[0] for x in db.cursor.description]
+        row_headers = [x[0] for x in db.cursor.description]
         result = db.cursor.fetchall()
-        jsonData = []
+        json_data = []
         for row in result:
-            jsonData.append(dict(zip(rowHeaders, row)))
-        return jsonData
+            json_data.append(dict(zip(row_headers, row)))
+        return json_data
     except Exception as ex:
         print(ex)
         return ex    
 
-def updateCareer(id: int, name: str | None, school_id: str | None, description: str | None) -> bool | Exception:
+def update_career(id: int, name: str | None, school_id: str | None, description: str | None) -> bool | Exception:
     try:
         db = Database()
         query = '''
@@ -50,7 +50,7 @@ def updateCareer(id: int, name: str | None, school_id: str | None, description: 
         print(ex)
         return ex
     
-def deleteCareer(id: int) -> bool | Exception:
+def delete_career(id: int) -> bool | Exception:
     try:
         db = Database()
         query = 'DELETE career WHERE id = ?'
@@ -62,5 +62,5 @@ def deleteCareer(id: int) -> bool | Exception:
         return ex
 
 if __name__ == '__main__':
-    print(readAllCareers())
-    print("Module name")
+    print(read_all_careers())
+    print("module name")

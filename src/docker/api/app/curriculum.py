@@ -1,20 +1,20 @@
 from Database import Database
 
-def createCurriculum(id: str, curriculumStatusId: int, careerId: int, creationDate: str, activationDate: str, finishDate: str) -> bool | Exception:
+def create_curriculum(id: str, curriculum_status_id: int, career_id: int, creation_date: str, activation_date: str, finish_date: str) -> bool | Exception:
     try:
         db = Database()
         query = '''
                 INSERT INTO curriculum (id, curriculum_status_id, career_id, creation_date, activation_date, finish_date)
                 VALUES (?, ?, ?, ?, ?, ?)
                 '''
-        db.cursor.execute(query, (id, curriculumStatusId, careerId, creationDate, activationDate, finishDate))
+        db.cursor.execute(query, (id, curriculum_status_id, career_id, creation_date, activation_date, finish_date))
         db.cursor.commit()
         return True
     except Exception as ex:
         print(ex)
         return ex
 
-def readAllCurriculums() -> list | Exception:
+def read_all_curriculums() -> list | Exception:
     try:
         db = Database()
         query = '''
@@ -24,17 +24,17 @@ def readAllCurriculums() -> list | Exception:
                 INNER JOIN career ON curriculum.career_id = career.id
                 '''
         db.cursor.execute(query)
-        rowHeaders = [x[0] for x in db.cursor.description]
+        row_headers = [x[0] for x in db.cursor.description]
         result = db.cursor.fetchall()
-        jsonData = []
+        json_data = []
         for row in result:
-            jsonData.append(dict(zip(rowHeaders, row)))
-        return jsonData
+            json_data.append(dict(zip(row_headers, row)))
+        return json_data
     except Exception as ex:
         print(ex)
         return ex
 
-def updateCurriculum(id: str, curriculumStatusId: int | None, careerId: int | None, creationDate: str | None, activationDate: str | None, finishDate: str | None) -> bool | Exception:
+def update_curriculum(id: str, curriculum_status_id: int | None, career_id: int | None, creation_date: str | None, activation_date: str | None, finish_date: str | None) -> bool | Exception:
     try:
         db = Database()
         query = '''
@@ -46,14 +46,14 @@ def updateCurriculum(id: str, curriculumStatusId: int | None, careerId: int | No
                     finish_date = COALESCE(?, finish_date)
                 WHERE id = ?
                 '''
-        db.cursor.execute(query, (id, curriculumStatusId, careerId, creationDate, activationDate, finishDate))
+        db.cursor.execute(query, (id, curriculum_status_id, career_id, creation_date, activation_date, finish_date))
         db.cursor.commit()
         return True
     except Exception as ex:
         print(ex)
         return ex
     
-def deleteCurriculum(id: str) -> bool | Exception:
+def delete_curriculum(id: str) -> bool | Exception:
     try:
         db = Database()
         query = 'DELETE curriculum WHERE id = ?'
@@ -64,22 +64,20 @@ def deleteCurriculum(id: str) -> bool | Exception:
         print(ex)
         return ex
     
-def readAllCurriculumStatuses() -> list | Exception:
+def read_all_curriculum_statuses() -> list | Exception:
     try:
         db = Database()
         query = 'SELECT id, name FROM curriculum_status'
         db.cursor.execute(query)
-        rowHeaders = [x[0] for x in db.cursor.description]
+        row_headers = [x[0] for x in db.cursor.description]
         result = db.cursor.fetchall()
-        jsonData = []
+        json_data = []
         for row in result:
-            jsonData.append(dict(zip(rowHeaders, row)))
-        return jsonData
+            json_data.append(dict(zip(row_headers, row)))
+        return json_data
     except Exception as ex:
         print(ex)
         return ex
 
 if __name__ == '__main__':
-    #print(createCurriculum("2004", 2, 1, "2023/04/25", "2023/04/27", "2023/04/29"))
-    print(readAllCurriculumStatuses())
-    print('period module')
+    print('curriculum module')

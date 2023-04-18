@@ -1,35 +1,35 @@
 from Database import Database
 
-def createSchool(id: str, name: str, email: str, phoneNumber: str, directorId: str) -> bool | Exception:
+def create_school(id: str, name: str, email: str, phone_number: str, director_id: str) -> bool | Exception:
     try:
         db = Database()
         query = '''
                 INSERT INTO school (id, name, email, phone_number, director_id) 
                 VALUES (?, ?, ?, ?, ?)
                 '''
-        db.cursor.execute(query, id, name, email, phoneNumber, directorId)
+        db.cursor.execute(query, id, name, email, phone_number, director_id)
         db.cursor.commit()
         return True
     except Exception as ex:
         print(ex)
         return ex
     
-def readAllSchools() -> list | Exception:
+def read_all_schools() -> list | Exception:
     try:
         db = Database()
         query = 'SELECT id, name, email, phone_number, director_id FROM school'
         db.cursor.execute(query)
-        rowHeaders = [x[0] for x in db.cursor.description]
+        row_headers = [x[0] for x in db.cursor.description]
         result = db.cursor.fetchall()
-        jsonData = []
+        json_data = []
         for row in result:
-            jsonData.append(dict(zip(rowHeaders, row)))
-        return jsonData
+            json_data.append(dict(zip(row_headers, row)))
+        return json_data
     except Exception as ex:
         print(ex)
         return ex
     
-def updateSchool(id: str, name: str | None, email: str | None, phoneNumber: str | None, directorId: str | None) -> bool | Exception:
+def update_school(id: str, name: str | None, email: str | None, phone_number: str | None, director_id: str | None) -> bool | Exception:
     try:
         db = Database()
         query = '''
@@ -40,14 +40,14 @@ def updateSchool(id: str, name: str | None, email: str | None, phoneNumber: str 
                     director_id = COALESCE(?, director_id)
                 WHERE id = ?
                 '''
-        db.cursor.execute(query, name, email, phoneNumber, directorId, id)
+        db.cursor.execute(query, name, email, phone_number, director_id, id)
         db.cursor.commit()
         return True
     except Exception as ex:
         print(ex)
         return ex
     
-def deleteSchool(id: str) -> bool | Exception:
+def delete_school(id: str) -> bool | Exception:
     try:
         db = Database()
         query = 'DELETE school WHERE id = ?'
