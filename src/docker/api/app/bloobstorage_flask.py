@@ -19,6 +19,6 @@ def upload_file():
     return   "<p>Upload!</p>" 
  
  
-@BLOOBSTORAGE_BLUEPRINT.route('/eduhub/<name>', methods=['GET']) 
+@BLOOBSTORAGE_BLUEPRINT.route('/eduhub/files/<string:name>', methods=['GET']) 
 def download_file(name): 
     return send_from_directory(current_app.config["UPLOAD_FOLDER"], name)
