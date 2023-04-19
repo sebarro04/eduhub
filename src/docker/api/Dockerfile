@@ -11,14 +11,9 @@ RUN curl https://packages.microsoft.com/config/debian/11/prod.list > /etc/apt/so
 RUN apt-get update -y
 RUN ACCEPT_EULA=Y apt-get install -y msodbcsql18
 
-# to blob 
-RUN sudo apt install python3-pip
-RUN pip install azure-storage-blob
-RUN pip install azure-storage-blob azure-identity   
-
 WORKDIR /app
 
 COPY app/. .
 RUN pip3 install --no-cache-dir -r requirements.txt
 
-CMD [ "flask",  "--__init__", "__init__", "run", "--host=0.0.0.0" ]
+CMD ["python3", "./__init__.py"]

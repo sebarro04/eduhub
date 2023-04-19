@@ -1,9 +1,0 @@
-- [x] Periodos lectivos
-- [x] Escuelas
-- [x] Cursos (Gerald)
-- [x] Carreras (Gerald) 
-- [ ] Planes (Gerald) (In progress)
-- [ ] Grupos(Gerald) 
-- [ ] Matricula (Sebarro)
-- [ ] Actividades (Sebarro)
-- [x] Evaluacion curso/grupo (rating)

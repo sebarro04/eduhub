@@ -1,6 +1,6 @@
 - [x] Azure initialization -> Arroniz
 - [x] DB Model -> Todos
-- [ ] NodeJS -> 1 persona
+- [ ] NodeJS -> Arroniz
 - [ ] Firebase & thunkable -> Erick
 - [ ] API Bloob Storage -> Sofía
-- [ ] APIs for thunkable -> Arroniz y Gerald
+- [ ] API for thunkable -> Arroniz y Gerald (funcionamiento necesario para matricula)

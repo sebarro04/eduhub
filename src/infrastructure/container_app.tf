@@ -31,13 +31,13 @@ template {
     max_replicas = 10
     min_replicas = 0
     container {
-      name   = "api"
-      image  = "docker.io/sebarro04/api:latest"
+      name   = "eduhub"
+      image  = "sebarro04/edubub:latest"
       cpu    = "0.25"
       memory = "0.5Gi"
       env {
-        name  = "ENV1"
-        value = "VAL1"
+        name  = "AZURE_CLIENT_ID"
+        value = "${azurerm_user_assigned_identity.main.client_id}"
       }
       env {
         name  = "ENV2"
@@ -48,7 +48,6 @@ template {
 #        timeout   = 5
 #        transport = "HTTP"
 #      }
-
 #      readiness_probe {
 #        port      = 5000
 #        timeout   = 5
@@ -79,4 +78,34 @@ resource "azurerm_role_assignment" "main" {
   scope                = data.azurerm_subscription.main.id
   role_definition_name = "Owner"
   principal_id         = azurerm_user_assigned_identity.main.principal_id
+}
+resource "azurerm_role_assignment" "storage_blob_data_contributor" {
+  scope                = data.azurerm_subscription.main.id
+  role_definition_name = "Storage Blob Data Contributor"
+  principal_id         = azurerm_user_assigned_identity.main.principal_id
+}
+
+resource "azurerm_role_assignment" "storage_queue_data_contributor" {
+  scope                = data.azurerm_subscription.main.id
+  role_definition_name = "Storage Queue Data Contributor"
+  principal_id         = azurerm_user_assigned_identity.main.principal_id
+}
+
+data  "azurerm_client_config" "current" {
+}
+
+output "account_id" {
+  value = data.azurerm_client_config.current.object_id
+}
+
+resource "azurerm_role_assignment" "storage_blob_data_contributor_user" {
+  scope                = data.azurerm_subscription.main.id
+  role_definition_name = "Storage Blob Data Contributor"
+  principal_id         = data.azurerm_client_config.current.object_id
+}
+
+resource "azurerm_role_assignment" "storage_queue_data_contributor_user" {
+  scope                = data.azurerm_subscription.main.id
+  role_definition_name = "Storage Queue Data Contributor"
+  principal_id         = data.azurerm_client_config.current.object_id
 }
