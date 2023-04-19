@@ -11,6 +11,10 @@ RUN curl https://packages.microsoft.com/config/debian/11/prod.list > /etc/apt/so
 RUN apt-get update -y
 RUN ACCEPT_EULA=Y apt-get install -y msodbcsql18
 
+RUN sudo apt install python3-pip
+RUN pip install azure-storage-blob
+RUN pip install azure-storage-blob azure-identity  
+
 WORKDIR /app
 
 COPY app/. .
