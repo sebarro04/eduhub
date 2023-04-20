@@ -1,4 +1,4 @@
-import os   
+import os  
 from flask import Blueprint,Flask, jsonify, request,flash,redirect, url_for, send_from_directory, current_app
 from werkzeug.utils import secure_filename
 from azure.identity import DefaultAzureCredential

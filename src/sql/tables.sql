@@ -1,3 +1,16 @@
+CREATE TABLE role (
+	id INT NOT NULL CONSTRAINT PK__role PRIMARY KEY(id),
+	name VARCHAR(15) NOT NULL CONSTRAINT UQ__role__name UNIQUE(name)
+)
+GO
+
+CREATE TABLE user_role (
+	id INT IDENTITY(1, 1) NOT NULL CONSTRAINT PK__user_role PRIMARY KEY(id),
+	user_id VARCHAR(128) NOT NULL,
+	role_id INT NOT NULL CONSTRAINT FK__user_role__role FOREIGN KEY(role_id) REFERENCES role(id)
+)
+GO
+
 CREATE TABLE period_type (
 	id INT NOT NULL CONSTRAINT PK__period_type PRIMARY KEY(id),
 	name VARCHAR(255) NOT NULL CONSTRAINT UQ__period_type__name UNIQUE(name)
@@ -10,7 +23,6 @@ CREATE TABLE period_status (
 )
 GO
 
-DROP TABLE period
 CREATE TABLE period (
 	id INT IDENTITY(1, 1) NOT NULL CONSTRAINT PK__period PRIMARY KEY(id),
 	period_type_id INT NOT NULL CONSTRAINT FK__period__period_type FOREIGN KEY(period_type_id) REFERENCES period_type(id),
@@ -26,7 +38,7 @@ CREATE TABLE school (
 	name VARCHAR(255) NOT NULL CONSTRAINT UQ__school__name UNIQUE(name),
 	email NVARCHAR(255) NOT NULL CONSTRAINT UQ__school__email UNIQUE(email),
 	phone_number CHAR(8) NOT NULL CONSTRAINT UQ__school__phone_number UNIQUE(phone_number),
-	director_id VARCHAR(255) NOT NULL
+	director_id VARCHAR(128) NOT NULL
 )
 GO
 
@@ -43,7 +55,7 @@ GO
 
 CREATE TABLE career (
 	id INT IDENTITY(1, 1) CONSTRAINT PK__career PRIMARY KEY(id),
-	name VARCHAR(255),
+	name VARCHAR(255) NOT NULL CONSTRAINT UQ__career__name UNIQUE(name),
 	school_id CHAR(2) NOT NULL CONSTRAINT FK__career__school FOREIGN KEY(school_id) REFERENCES school(id),
 	description TEXT NOT NULL
 )
@@ -94,14 +106,14 @@ CREATE TABLE class (
 	id INT IDENTITY(1, 1) NOT NULL CONSTRAINT PK__class PRIMARY KEY(id),
 	course_id CHAR(4) NOT NULL CONSTRAINT FK__class__course FOREIGN KEY(course_id) REFERENCES course(id),
 	period_id INT NOT NULL CONSTRAINT FK__class__period FOREIGN KEY(period_id) REFERENCES period(id),
-	professor_id VARCHAR(255) NOT NULL,
+	professor_id VARCHAR(128) NOT NULL,
 	max_student_capacity INT NOT NULL CONSTRAINT CHK__class__max_student_capacity CHECK(max_student_capacity >= 0)
 )
 GO
 
 CREATE TABLE student_class (
 	id INT IDENTITY(1, 1) NOT NULL CONSTRAINT PK__student_class PRIMARY KEY(id),
-	student_id VARCHAR(255) NOT NULL,
+	student_id VARCHAR(128) NOT NULL,
 	class_id INT NOT NULL CONSTRAINT FK__student_class__class FOREIGN KEY(class_id) REFERENCES class(id),
 	grade FLOAT NOT NULL CONSTRAINT CHK__student_class__grade CHECK(grade >= 0)
 )
@@ -131,7 +143,7 @@ GO
 
 CREATE TABLE archive (
 	id INT IDENTITY(1, 1) NOT NULL CONSTRAINT PK__archive PRIMARY KEY(id),
-	user_id VARCHAR(255) NOT NULL,
+	user_id VARCHAR(128) NOT NULL,
 	archive_type_id INT NOT NULL CONSTRAINT FK__archive__archive_type FOREIGN KEY(archive_type_id) REFERENCES archive_type(id),
 	period_id INT NOT NULL CONSTRAINT FK__archive__period FOREIGN KEY(period_id) REFERENCES period(id),
 	creation_date DATETIME NOT NULL,
@@ -164,14 +176,14 @@ GO
 
 CREATE TABLE student_curriculum (
 	id INT IDENTITY(1, 1) NOT NULL CONSTRAINT PK__student_curriculum PRIMARY KEY(id),
-	student_id VARCHAR(255) NOT NULL,
+	student_id VARCHAR(128) NOT NULL,
 	curriculum_id VARCHAR(4) NOT NULL CONSTRAINT FK__student_curriculum__curriculum FOREIGN KEY(curriculum_id) REFERENCES curriculum(id)
 )
 GO
 
 CREATE TABLE professor_school (
 	id INT IDENTITY(1, 1) NOT NULL CONSTRAINT PK__professor_school PRIMARY KEY(id),
-	professor_id VARCHAR(255) NOT NULL,
+	professor_id VARCHAR(128) NOT NULL,
 	school_id CHAR(2) NOT NULL CONSTRAINT FK__professor_school__school FOREIGN KEY(school_id) REFERENCES school(id)
 )
 GO
@@ -204,20 +216,12 @@ GO
 CREATE TABLE student_activity (
 	id INT IDENTITY(1, 1) NOT NULL CONSTRAINT PK__student_activity PRIMARY KEY(id),
 	activity_id INT NOT NULL CONSTRAINT FK__student_activity__activity FOREIGN KEY(activity_id) REFERENCES activity(id),
-	student_id VARCHAR(255) NOT NULL,
+	student_id VARCHAR(128) NOT NULL,
 	archive_id INT NOT NULL CONSTRAINT FK__student_activity__archive_id__archive FOREIGN KEY(archive_id) REFERENCES archive(id),
 	upload_date DATETIME NOT NULL,
 	professor_archive_id INT CONSTRAINT FK__student_activity__professor_archive_id__archive FOREIGN KEY(professor_archive_id) REFERENCES archive(id),
 	comment TEXT,
 	grade FLOAT CONSTRAINT CHK__student_activity_review__grade CHECK(grade >= 0)
-)
-GO
-
-CREATE TABLE student_period (
-	id INT IDENTITY(1, 1) NOT NULL CONSTRAINT PK__student_period PRIMARY KEY(id),
-	student_id VARCHAR(255) NOT NULL,
-	period_id INT NOT NULL CONSTRAINT FK__student_period__period FOREIGN KEY(period_id) REFERENCES period(id),
-	grade FLOAT CONSTRAINT CHK__student_period__grade CHECK(grade >= 0)
 )
 GO
 
@@ -234,14 +238,14 @@ GO
 
 CREATE TABLE student_enrollment_period (
 	id INT IDENTITY(1, 1) NOT NULL CONSTRAINT PK__student_enrollment_time PRIMARY KEY(id),
-	student_id VARCHAR(255) NOT NULL,
+	student_id VARCHAR(128) NOT NULL,
 	enrollment_period_id INT NOT NULL CONSTRAINT FK__student_enrollment_period__enrollment_period FOREIGN KEY(enrollment_period_id) REFERENCES enrollment_period(id)
 )
 GO
 
 CREATE TABLE student_waiting_enrollment (
 	id INT IDENTITY(1, 1) NOT NULL CONSTRAINT PK__student_waiting_enrollment PRIMARY KEY(id),
-	student_id VARCHAR(255) NOT NULL,
+	student_id VARCHAR(128) NOT NULL,
 	enrollment_period_id INT NOT NULL CONSTRAINT FK__student_waiting_enrollment__enrollment_period FOREIGN KEY(enrollment_period_id) REFERENCES enrollment_period(id),
 	class_id INT NOT NULL CONSTRAINT FK__student_waiting_enrollment__class FOREIGN KEY(class_id) REFERENCES class(id)
 )
@@ -253,6 +257,6 @@ CREATE TABLE class_rating (
 	difficulty INT NOT NULL CONSTRAINT CHK__class_rating__difficulty CHECK(difficulty BETWEEN 1 AND 10),
 	quality INT NOT NULL CONSTRAINT CHK__class_rating__quality CHECK(quality BETWEEN 1 AND 10),
 	overall_grade INT NOT NULL CONSTRAINT CHK__class_rating__overall_grade CHECK(overall_grade BETWEEN 1 AND 10),
-	comment TEXT
+	comment VARCHAR(255)
 )
 GO
