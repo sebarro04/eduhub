@@ -10,7 +10,7 @@ def read_all_curriculum_statuses():
         return 'Error with the database', 500
     response = jsonify(result)
     response.status_code = 200
-    return response
+    return response 
 
 @CURRICULUM_BLUEPRINT.route('/eduhub/curriculums', methods = ['POST'])
 def createCurriculum():
@@ -32,7 +32,7 @@ def createCurriculum():
 def read_all_curriculums():
     result = curriculum.read_all_curriculums()    
     if isinstance(result, Exception):
-        return 'Error with the database', 500   
+        return 'Error with the database', 500
     response = jsonify(result)
     response.status_code = 200
     return response
