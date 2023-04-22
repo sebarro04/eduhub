@@ -114,8 +114,7 @@ GO
 CREATE TABLE student_class (
 	id INT IDENTITY(1, 1) NOT NULL CONSTRAINT PK__student_class PRIMARY KEY(id),
 	student_id VARCHAR(128) NOT NULL,
-	class_id INT NOT NULL CONSTRAINT FK__student_class__class FOREIGN KEY(class_id) REFERENCES class(id),
-	grade FLOAT NOT NULL CONSTRAINT CHK__student_class__grade CHECK(grade >= 0)
+	class_id INT NOT NULL CONSTRAINT FK__student_class__class FOREIGN KEY(class_id) REFERENCES class(id)
 )
 GO
 
@@ -258,5 +257,14 @@ CREATE TABLE class_rating (
 	quality INT NOT NULL CONSTRAINT CHK__class_rating__quality CHECK(quality BETWEEN 1 AND 10),
 	overall_grade INT NOT NULL CONSTRAINT CHK__class_rating__overall_grade CHECK(overall_grade BETWEEN 1 AND 10),
 	comment VARCHAR(255)
+)
+GO
+
+CREATE TABLE grade_record (
+	id INT IDENTITY(1, 1) NOT NULL CONSTRAINT PK__grade_record PRIMARY KEY(id),
+	student_id VARCHAR(128) NOT NULL,
+	course_id CHAR(4) NOT NULL CONSTRAINT FK__grade_record__course FOREIGN KEY(course_id) REFERENCES course(id),
+	period_id INT NOT NULL CONSTRAINT FK__grade_record__period FOREIGN KEY(period_id) REFERENCES period(id),
+	grade INT NOT NULL CONSTRAINT CHK__grade_record__grade CHECK(grade >= 0)
 )
 GO
