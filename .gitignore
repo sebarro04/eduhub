@@ -1,1 +1,2 @@
 src/infrastructure/.terraform
+src/infrastructure/.terraform.lock.hcl
