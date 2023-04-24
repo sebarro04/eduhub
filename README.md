@@ -1,4 +1,4 @@
-# Documentación <!-- omit in toc -->
+# EduHub <!-- omit in toc -->
 
 - [1. Diagramas](#1-diagramas)
   - [1.1. Diagrama De Arquitectura](#11-diagrama-de-arquitectura)
