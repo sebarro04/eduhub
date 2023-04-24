@@ -1,19 +1,8 @@
 from flask import Flask
-from period_flask import PERIOD_BLUERPRINT
-from school_flask import SCHOOL_BLUERPRINT
-from course_flask import COURSE_BLUERPRINT
-from career_flask import CAREER_BLUEPRINT
-from curriculum_flask import CURRICULUM_BLUEPRINT
-from class_rating_flask import CLASS_RATING_BLUERPRINT
 from blobstorage_flask import BLOBSTORAGE_BLUEPRINT
 
 app = Flask(__name__)
-app.register_blueprint(PERIOD_BLUERPRINT)
-app.register_blueprint(SCHOOL_BLUERPRINT)
-app.register_blueprint(CLASS_RATING_BLUERPRINT)
-app.register_blueprint(COURSE_BLUERPRINT)
-app.register_blueprint(CAREER_BLUEPRINT)
-app.register_blueprint(CURRICULUM_BLUEPRINT)
+
 app.register_blueprint(BLOBSTORAGE_BLUEPRINT)
 
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/' 
