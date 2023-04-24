@@ -1,6 +1,7 @@
 - [x] Azure initialization -> Arroniz
 - [x] DB Model -> Todos
-- [ ] NodeJS -> Arroniz
+- [ ] NodeJS -> Sebarro
 - [ ] Firebase & thunkable -> Erick
-- [ ] API Bloob Storage -> Sofía
-- [ ] API for thunkable -> Arroniz y Gerald (funcionamiento necesario para matricula)
+- [ ] API Bloob Storage -> Sebarro
+- [ ] API for thunkable -> Sofia y Gerald (funcionamiento necesario para matricula)
+- [ ] Logs en cassandra
