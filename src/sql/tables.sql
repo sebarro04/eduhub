@@ -89,8 +89,8 @@ GO
 CREATE TABLE curriculum_course_dependency (
 	id INT IDENTITY(1, 1) NOT NULL CONSTRAINT PK__course_dependency PRIMARY KEY(id),
 	curriculum_id VARCHAR(4) NOT NULL CONSTRAINT FK__curriculum_course_dependency__curriculum FOREIGN KEY(curriculum_id) REFERENCES curriculum(id),
-	course_id CHAR(4) NOT NULL CONSTRAINT FK__curriculum_course_dependency__course FOREIGN KEY(course_id) REFERENCES course(id),
-	course_dependency_id CHAR(4) NOT NULL CONSTRAINT FK__curriculum_course_dependency__course FOREIGN KEY(course_dependency_id) REFERENCES course(id)
+	course_id CHAR(4) NOT NULL CONSTRAINT FK__curriculum_course_dependency__course_id__course FOREIGN KEY(course_id) REFERENCES course(id),
+	course_dependency_id CHAR(4) NOT NULL CONSTRAINT FK__curriculum_course_dependency__course_dependency_id__course FOREIGN KEY(course_dependency_id) REFERENCES course(id)
 )
 GO
 
