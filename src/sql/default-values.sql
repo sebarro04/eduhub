@@ -2,8 +2,8 @@ INSERT INTO role (id, name)
 VALUES 
 (1, 'Administrador'),
 (2, 'Profesor'),
-(1, 'Estudiante'),
-(1, 'Asistente')
+(3, 'Estudiante'),
+(4, 'Asistente')
 GO
 
 INSERT INTO period_type (id, name)
@@ -13,13 +13,6 @@ VALUES
 (3, 'Trimestral'),
 (4, 'Cuatrimestral'),
 (5, 'Bimestral')
-GO
-
-INSERT INTO period_status (id, name)
-VALUES
-(1, 'Creado'),
-(2, 'En progreso'),
-(3, 'Finalizado')
 GO
 
 INSERT INTO period_status (id, name)
