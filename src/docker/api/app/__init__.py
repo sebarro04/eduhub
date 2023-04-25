@@ -1,9 +1,11 @@
 from flask import Flask
 from blobstorage_flask import BLOBSTORAGE_BLUEPRINT
+from enrollment_flask import ENROLLMENT_BLUEPRINT
 
 app = Flask(__name__)
 
 app.register_blueprint(BLOBSTORAGE_BLUEPRINT)
+app.register_blueprint(ENROLLMENT_BLUEPRINT)
 
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/' 
 UPLOAD_FOLDER = 'C:/Users/sofia/OneDrive/Documentos/Prueba' 

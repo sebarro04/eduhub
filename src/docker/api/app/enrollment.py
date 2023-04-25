@@ -22,3 +22,14 @@ from Database import Database
 #     WHERE period_id = last_period.max_id
 # )
 # WHERE student_class.student_id = 1
+
+def current_enrollment_time() -> float | Exception:
+    try:
+        db = Database()
+        query = ''
+        db.cursor.execute(query, id)
+        db.cursor.commit()
+        return True
+    except Exception as ex:
+        print(ex)
+        return ex
