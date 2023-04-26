@@ -227,11 +227,11 @@ GO
 CREATE TABLE enrollment_period (
 	id INT IDENTITY(1, 1) NOT NULL CONSTRAINT PK__enrollment_period PRIMARY KEY(id),
 	name VARCHAR(255) NOT NULL,
-	start_time DATETIME NOT NULL,
-	end_time DATETIME NOT NULL,
+	start_datetime DATETIME NOT NULL,
+	end_datetime DATETIME NOT NULL,
 	is_open BIT NOT NULL,
 	period_id INT NOT NULL CONSTRAINT FK__enrollment_period__period FOREIGN KEY(period_id) REFERENCES period(id),
-	CONSTRAINT CHK__enrollment_period__start_time__end_time CHECK(start_time < end_time)
+	CONSTRAINT CHK__enrollment_period__start_datetime__end_datetime CHECK(start_datetime < end_datetime)
 )
 GO
 
