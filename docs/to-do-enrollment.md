@@ -6,4 +6,5 @@
 - [ ] tentative_enrollment()
 - [ ] read_all_enrollment_courses_by_student_id (student_id: str)
 - [ ] generate_enrollment_report()
+- [ ] load_enrollment_by_student_id(studentId)
 

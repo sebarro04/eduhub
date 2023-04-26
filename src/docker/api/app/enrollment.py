@@ -23,7 +23,20 @@ from Database import Database
 # )
 # WHERE student_class.student_id = 1
 
+#In process, waiting change
 def current_enrollment_time() -> float | Exception:
+    try:
+        db = Database()
+        query = ''
+        db.cursor.execute(query, id)
+        db.cursor.commit()
+        return True
+    except Exception as ex:
+        print(ex)
+        return ex
+    
+#in process
+def load_enrollment_by_student_id(studentId) -> list | Exception:
     try:
         db = Database()
         query = ''
