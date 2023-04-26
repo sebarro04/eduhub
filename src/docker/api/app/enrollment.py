@@ -1,25 +1,42 @@
 from Database import Database
 
-#In process, waiting change
-def current_enrollment_time() -> float | Exception:
+def current_enrollment_time(student_enrollment_period_id) -> float | Exception:
     try:
         db = Database()
-        query = ''
-        db.cursor.execute(query, id)
-        db.cursor.commit()
-        return True
+        query = '''SELECT DATEPART(hour, start_datetime)
+                FROM student_enrollment_period
+                INNER JOIN enrollment_period ON student_enrollment_period.enrollment_period_id = enrollment_period.id 
+                WHERE student_enrollment_period.id =?'''
+        db.cursor.execute(query, student_enrollment_period_id)
+        
+        #Arreglar el retorno de datos----------------------------------
+        result = db.cursor.fetchone()
+        db.cursor.close()
+        db.connection.close()
+        if result:
+            return float(result[0])
+        else:
+            raise Exception('No se encontró la hora de matriculación actual.')
     except Exception as ex:
         print(ex)
         return ex
     
 #in process
-def load_enrollment_by_student_id(studentId) -> list | Exception:
+#Error en la base de datos 
+def load_enrollment_by_student_id(studentId: str) -> list | Exception:
     try:
         db = Database()
-        query = ''
-        db.cursor.execute(query, id)
-        db.cursor.commit()
-        return True
+        query = '''SELECT enrollment_period.name, enrollment_period.start_datetime, enrollment_period.end_datetime, enrollment_period.is_open, enrollment_period.period_id
+                FROM student_enrollment_period 
+                INNER JOIN enrollment_period ON student_enrollment_period.enrollment_period_id = enrollment_period.id AND enrollment_period.is_open = 1
+                WHERE student_enrollment_period.student_id =?'''
+        db.cursor.execute(query,studentId)
+        row_headers = [x[0] for x in db.cursor.name]
+        result = db.cursor.fetchall()
+        json_data = []
+        for row in result:
+            json_data.append(dict(zip(row_headers, row)))
+        return json_data
     except Exception as ex:
         print(ex)
         return ex
