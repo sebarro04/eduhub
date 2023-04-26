@@ -26,8 +26,8 @@ def calculate_enrollment_hour_by_student_id(student_id,student_enrollment_period
     return response
 
 @ENROLLMENT_BLUEPRINT.route('/eduhub/enrollment_load/<student_id>', methods = ['GET'])
-def load_enrollment_by_student_id(student_id):
-    result = enrollment.load_enrollment_by_student_id(student_id)    
+def read_all_enrollments_by_student_id(student_id):
+    result = enrollment.read_all_enrollments_by_student_id(student_id)    
     if isinstance(result, Exception):
         return 'Error with the database', 500 
     response = jsonify(result)

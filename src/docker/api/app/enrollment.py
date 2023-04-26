@@ -23,7 +23,7 @@ def current_enrollment_time(student_enrollment_period_id) -> float | Exception:
     
 #in process
 #Error en la base de datos 
-def load_enrollment_by_student_id(studentId: str) -> list | Exception:
+def read_all_enrollments_by_student_id(studentId: str) -> list | Exception:
     try:
         db = Database()
         query = '''SELECT enrollment_period.name, enrollment_period.start_datetime, enrollment_period.end_datetime, enrollment_period.is_open, enrollment_period.period_id
