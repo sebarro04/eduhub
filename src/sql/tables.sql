@@ -159,13 +159,6 @@ CREATE TABLE course_archive (
 )
 GO
 
-CREATE TABLE career_archive (
-	id INT IDENTITY(1, 1) NOT NULL CONSTRAINT PK__career_archive PRIMARY KEY(id),
-	career_id INT NOT NULL CONSTRAINT FK__career_archive__career FOREIGN KEY(career_id) REFERENCES career(id),
-	archive_id INT NOT NULL CONSTRAINT FK__career_archive__archive FOREIGN KEY(archive_id) REFERENCES archive(id)
-)
-GO
-
 CREATE TABLE class_archive (
 	id INT IDENTITY(1, 1) NOT NULL CONSTRAINT PK__class_archive PRIMARY KEY(id),
 	class_id INT NOT NULL CONSTRAINT FK__class_archive__class FOREIGN KEY(class_id) REFERENCES class(id),

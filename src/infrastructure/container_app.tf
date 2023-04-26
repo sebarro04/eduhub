@@ -40,8 +40,24 @@ template {
         value = "${azurerm_user_assigned_identity.main.client_id}"
       }
       env {
-        name  = "ENV2"
-        value = "VAL2"
+        name  = "SQL_SERVER"
+        value = "tcp:gamma-sqlserver.database.windows.net"
+      }
+      env {
+        name  = "SQL_SERVER_DATABASE"
+        value = "db01"
+      }
+      env {
+        name  = "SQL_SERVER_USERNAME"
+        value = "el-adm1n"
+      }
+      env {
+        name  = "SQL_SERVER_PASSWORD"
+        value = "dT-Dog01@-bla"
+      }
+      env {
+        name  = "SQL_SERVER_DRIVER"
+        value = "{ODBC Driver 18 for SQL Server}"
       }
 #      liveness_probe {
 #        port      = 5000
