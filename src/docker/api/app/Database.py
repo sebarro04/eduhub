@@ -2,7 +2,7 @@ import pyodbc
 
 class Database:
     def __init__(self):
-        self.server = 'tcp:proyecto1-sqlserver.database.windows.net'
+        self.server = 'tcp:gamma-sqlserver.database.windows.net'
         self.database = 'db01'
         self.username = 'el-adm1n'
         self.password = 'dT-Dog01@-bla'
