@@ -79,7 +79,6 @@ def calculate_period_average(studentID: int) -> int | Exception:
                 '''
         db.cursor.execute(query, (studentID, studentID))
         result = db.cursor.fetchone()[0]  # obtiene el resultado de la consulta
-
         db.cursor.commit()
         return result  # devuelve el resultado de la consulta
     except Exception as ex:

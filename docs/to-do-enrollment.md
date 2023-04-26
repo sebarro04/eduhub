@@ -4,7 +4,7 @@
 - [x] calculate_student_enrollment_average() 
 - [ ] check_schedule_clash()
 - [ ] tentative_enrollment()
-- [ ] read_all_enrollment_courses_by_student_id (student_id: str)
+- [ ] read_all_enrollment_courses_by_student_id (student_id: str)  (In progress Gerald)
 - [ ] generate_enrollment_report()
 - [ ] read_all_enrollments_by_student_id(studentId) (In progress Sofi)
 
