@@ -93,6 +93,19 @@ def calculate_period_average(studentID: int) -> int | Exception:
     except Exception as ex:
         print(ex)
         return ex
-    
+'''    
+DECLARE @student_id VARCHAR(128) = '2021023226'
+SELECT c.id, c.name, c.credits
+FROM course c
+INNER JOIN curriculum_course cc ON cc.course_id = c.id
+INNER JOIN curriculum_course_prerequisite ccp ON ccp.course_id = c.id AND ccp.curriculum_id = cc.curriculum_id
+LEFT JOIN grade_record gr ON gr.course_id = c.id AND gr.student_id = @student_id
+LEFT JOIN grade_record gr_prereq ON gr_prereq.course_id = ccp.course_prerequisite_id AND gr_prereq.student_id = @student_id
+LEFT JOIN student_curriculum sc ON sc.curriculum_id = cc.curriculum_id AND sc.student_id = @student_id
+WHERE (ccp.course_prerequisite_id IS NULL AND (gr.grade IS NULL OR gr.grade < 65.5))
+    OR (ccp.course_prerequisite_id IS NOT NULL AND gr_prereq.grade IS NOT NULL AND gr_prereq.grade >= 65.5 AND (gr.grade IS NULL OR gr.grade < 65.5))
+    OR (gr.student_id = @student_id AND gr.grade < 65.5 AND c.id IN (SELECT course_id FROM curriculum_course WHERE curriculum_id = sc.curriculum_id))
+'''
+
 if __name__ == '__main__':
     print(calculate_period_average(12))
