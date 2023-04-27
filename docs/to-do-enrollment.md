@@ -11,3 +11,4 @@
 - [ ] Desmatricular
 - [ ] Obtener hora inicio/fin de una matricula
 - [ ] Obtener fecha inicio/fin de una matricula
+- [ ] Mostrar clases de un curso
