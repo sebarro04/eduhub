@@ -5,9 +5,12 @@ USER_ROLE_BLUEPRINT = Blueprint('USER_ROLE_BLUEPRINT', __name__)
 
 @USER_ROLE_BLUEPRINT.route('/eduhub/users-roles', methods = ['POST'])
 def create_user_role():
-    json = request.json
-    user_id = json['user_id']
-    role_id = json['role_id']
+    if 'user_id' not in request.json:
+        return 'Missing user_id', 400
+    if 'role_id' not in request.json:
+        return 'Missing role_id', 400
+    user_id = request.json['user_id']
+    role_id = request.json['role_id']
     result = user_role.create_user_role(user_id, role_id)
     if isinstance(result, Exception):
         return 'Error with the database', 500
