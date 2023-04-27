@@ -134,35 +134,15 @@ CREATE TABLE schedule (
 )
 GO
 
-CREATE TABLE archive_type (
-	id INT NOT NULL CONSTRAINT PK__archive_type PRIMARY KEY(id),
-	name VARCHAR(255) NOT NULL CONSTRAINT UQ__archive_type__name UNIQUE(name)
-)
-GO
-
-CREATE TABLE archive (
-	id INT IDENTITY(1, 1) NOT NULL CONSTRAINT PK__archive PRIMARY KEY(id),
+CREATE TABLE [file] (
+	id INT IDENTITY(1, 1) NOT NULL CONSTRAINT PK__file PRIMARY KEY(id),
+	name VARCHAR(242) NOT NULL,
+	description VARCHAR(256),
+	url VARCHAR(256) NOT NULL,
 	user_id VARCHAR(128) NOT NULL,
-	archive_type_id INT NOT NULL CONSTRAINT FK__archive__archive_type FOREIGN KEY(archive_type_id) REFERENCES archive_type(id),
-	period_id INT NOT NULL CONSTRAINT FK__archive__period FOREIGN KEY(period_id) REFERENCES period(id),
-	creation_date DATETIME NOT NULL,
-	last_modification_date DATETIME NOT NULL,
-	name NVARCHAR(255) NOT NULL,
-	description NVARCHAR(255) NOT NULL
-)
-GO
-
-CREATE TABLE course_archive (
-	id INT IDENTITY(1, 1) NOT NULL CONSTRAINT PK__course_archive PRIMARY KEY(id),
-	course_id CHAR(4) NOT NULL CONSTRAINT FK__course_archive__course FOREIGN KEY(course_id) REFERENCES course(id),
-	archive_id INT NOT NULL CONSTRAINT FK__course_archive__archive FOREIGN KEY(archive_id) REFERENCES archive(id)
-)
-GO
-
-CREATE TABLE class_archive (
-	id INT IDENTITY(1, 1) NOT NULL CONSTRAINT PK__class_archive PRIMARY KEY(id),
-	class_id INT NOT NULL CONSTRAINT FK__class_archive__class FOREIGN KEY(class_id) REFERENCES class(id),
-	archive_id INT NOT NULL CONSTRAINT FK__class_archive__archive FOREIGN KEY(archive_id) REFERENCES archive(id)
+	class_id INT CONSTRAINT FK__file__class FOREIGN KEY(class_id) REFERENCES class(id),
+	creation_datetime DATETIME NOT NULL,
+	last_modified_datetime DATETIME
 )
 GO
 
@@ -201,7 +181,7 @@ CREATE TABLE activity (
 	due_date DATETIME NOT NULL,
 	percentage FLOAT NOT NULL CONSTRAINT CHK__activity__percentage CHECK(percentage > 0),
 	evaluation_category_id INT NOT NULL CONSTRAINT FK__activity__evaluation_category FOREIGN KEY(evaluation_category_id) REFERENCES evaluation_category(id),
-	archive_id INT CONSTRAINT FK__activity__archive FOREIGN KEY(archive_id) REFERENCES archive(id)
+	file_id INT CONSTRAINT FK__activity__file FOREIGN KEY(file_id) REFERENCES [file](id)
 )
 GO
 
@@ -209,9 +189,9 @@ CREATE TABLE student_activity (
 	id INT IDENTITY(1, 1) NOT NULL CONSTRAINT PK__student_activity PRIMARY KEY(id),
 	activity_id INT NOT NULL CONSTRAINT FK__student_activity__activity FOREIGN KEY(activity_id) REFERENCES activity(id),
 	student_id VARCHAR(128) NOT NULL,
-	archive_id INT NOT NULL CONSTRAINT FK__student_activity__archive_id__archive FOREIGN KEY(archive_id) REFERENCES archive(id),
+	file_id INT CONSTRAINT FK__student_activity__file_id__archive FOREIGN KEY(file_id) REFERENCES [file](id),
 	upload_date DATETIME NOT NULL,
-	professor_archive_id INT CONSTRAINT FK__student_activity__professor_archive_id__archive FOREIGN KEY(professor_archive_id) REFERENCES archive(id),
+	professor_file_id INT CONSTRAINT FK__student_activity__professor_file_id__archive FOREIGN KEY(professor_file_id) REFERENCES [file](id),
 	comment TEXT,
 	grade FLOAT CONSTRAINT CHK__student_activity_review__grade CHECK(grade >= 0)
 )
