@@ -1,6 +1,6 @@
 from Database import Database
 
-def current_enrollment_time(student_enrollment_period_id) -> float | Exception:
+def current_enrollment_time(student_enrollment_period_id) -> int | Exception:
     try:
         db = Database()
         query = '''SELECT DATEPART(hour, start_datetime)
@@ -8,15 +8,9 @@ def current_enrollment_time(student_enrollment_period_id) -> float | Exception:
                 INNER JOIN enrollment_period ON student_enrollment_period.enrollment_period_id = enrollment_period.id 
                 WHERE student_enrollment_period.id =?'''
         db.cursor.execute(query, student_enrollment_period_id)
-        
-        #Arreglar el retorno de datos----------------------------------
-        result = db.cursor.fetchone()
-        db.cursor.close()
-        db.connection.close()
-        if result:
-            return float(result[0])
-        else:
-            raise Exception('No se encontró la hora de matriculación actual.')
+        result = db.cursor.fetchone()[0]  # obtiene el resultado de la consulta
+        db.cursor.commit()
+        return result  # devuelve el resultado de la consulta
     except Exception as ex:
         print(ex)
         return ex
@@ -31,12 +25,8 @@ def read_all_enrollments_by_student_id(studentId: str) -> list | Exception:
                 INNER JOIN enrollment_period ON student_enrollment_period.enrollment_period_id = enrollment_period.id AND enrollment_period.is_open = 1
                 WHERE student_enrollment_period.student_id =?'''
         db.cursor.execute(query,studentId)
-        row_headers = [x[0] for x in db.cursor.name]
         result = db.cursor.fetchall()
-        json_data = []
-        for row in result:
-            json_data.append(dict(zip(row_headers, row)))
-        return json_data
+        return db.jsonify_query_result_headers(result)
     except Exception as ex:
         print(ex)
         return ex
@@ -86,4 +76,4 @@ def calculate_period_average(studentID: int) -> int | Exception:
         return ex
     
 if __name__ == '__main__':
-    print(calculate_period_average(1))
+    print(calculate_period_average(12))

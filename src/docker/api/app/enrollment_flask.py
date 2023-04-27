@@ -7,7 +7,7 @@ ENROLLMENT_BLUEPRINT = Blueprint('ENROLLMENT_BLUEPRINT', __name__)
 
 @ENROLLMENT_BLUEPRINT.route('/eduhub/enrollment/<student_id>/<student_enrollment_period_id>', methods = ['GET'])
 def calculate_enrollment_hour_by_student_id(student_id,student_enrollment_period_id):
-    average=80 #enrollment.calculate_student_enrollment_average(student_id)
+    average=enrollment.calculate_period_average(student_id)
     start_enrrollment=enrollment.current_enrollment_time(student_enrollment_period_id)
     enrollment_time=start_enrrollment
     
