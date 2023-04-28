@@ -219,5 +219,36 @@ def enrollment_end_time(enrollment_period_id: str) -> float | Exception:
         print(ex)
         return ex
     
+
+def enrollment_start_date(enrollment_period_id: str) -> str | Exception:
+    try:
+        db = Database()
+        query = '''SELECT CAST(DATEPART(day, start_datetime) AS VARCHAR(2)) + '-' +
+                RIGHT('0' + CAST(DATEPART(month, start_datetime) AS VARCHAR(2)), 2) + '-' +
+                RIGHT('0' + CAST(DATEPART(year, start_datetime) AS VARCHAR(4)), 4) AS fecha
+                FROM enrollment_period
+                WHERE enrollment_period.id = ?'''
+        db.cursor.execute(query, enrollment_period_id)
+        result = db.cursor.fetchone()[0]
+        return result
+    except Exception as ex:
+        print(ex)
+        return ex
+    
+def enrollment_end_date(enrollment_period_id: str) -> str | Exception:
+    try:
+        db = Database()
+        query = '''SELECT CAST(DATEPART(day, end_datetime) AS VARCHAR(2)) + '-' +
+                RIGHT('0' + CAST(DATEPART(month, end_datetime) AS VARCHAR(2)), 2) + '-' +
+                RIGHT('0' + CAST(DATEPART(year, end_datetime) AS VARCHAR(4)), 4) AS fecha
+                FROM enrollment_period
+                WHERE enrollment_period.id = ?'''
+        db.cursor.execute(query, enrollment_period_id)
+        result = db.cursor.fetchone()[0]
+        return result
+    except Exception as ex:
+        print(ex)
+        return ex
+    
 if __name__ == '__main__':
-    print(enrollment_end_time(5))
+    print(enrollment_start_date(5))
