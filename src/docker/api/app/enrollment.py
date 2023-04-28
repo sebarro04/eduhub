@@ -30,6 +30,36 @@ def read_all_enrollments_by_student_id(studentId: str) -> list | Exception:
         return ex
     
 
+def check_schedule_clash(new_class_id: str,studentId: str) -> list | Exception:
+    try:
+        db = Database()
+        query = '''DECLARE @new_class_start_time TIME
+                    DECLARE @new_class_end_time TIME
+                    DECLARE @new_class_day_id INT
+
+                    SELECT @new_class_start_time=schedule.start_time, @new_class_end_time=schedule.end_time, @new_class_day_id=schedule.day_id
+                    FROM class
+                    INNER JOIN schedule ON class.id=schedule.class_id
+                    WHERE class.id=?
+
+                    SELECT student_class.id, class.course_id
+                    FROM student_class
+                    INNER JOIN class ON student_class.class_id = class.id
+                    INNER JOIN schedule ON class.id = schedule.class_id
+                    INNER JOIN enrollment_period ON class.period_id = enrollment_period.period_id
+                    WHERE student_class.student_id = ?
+                    AND schedule.day_id = @new_class_day_id
+                    AND ((schedule.start_time >= @new_class_start_time AND schedule.start_time < @new_class_end_time)
+                        OR (schedule.end_time > @new_class_start_time AND schedule.end_time <= @new_class_end_time)
+                        OR (schedule.start_time <= @new_class_start_time AND schedule.end_time >= @new_class_end_time))
+                    AND enrollment_period.is_open = 1'''
+        db.cursor.execute(query,new_class_id,studentId)
+        result = db.cursor.fetchall()
+        return db.jsonify_query_result_headers(result)
+    except Exception as ex:
+        print(ex)
+        return ex
+
 def calculate_enrollment_hour_by_student_id(student_id : str,student_enrollment_period_id: str) -> list | Exception:
     try:
         average=calculate_period_average(student_id)
@@ -112,4 +142,4 @@ def read_all_enrollment_available_courses_by_student_id(studentID: str) -> list 
         return ex
     
 if __name__ == '__main__':
-    print(calculate_period_average(2021023226))
+    print(check_schedule_clash(3,12))
