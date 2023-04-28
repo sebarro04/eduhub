@@ -251,7 +251,7 @@ def enrollment_end_date(enrollment_period_id: str) -> str | Exception:
         return ex
     
 
-def show_classes_by_course(enrollment_period_id: str,course_id: str) -> list | Exception:
+def read_all_classes_by_course(enrollment_period_id: str,course_id: str) -> list | Exception:
     try:
         db = Database()
         query = '''DECLARE @period_id_current int
@@ -274,4 +274,4 @@ def show_classes_by_course(enrollment_period_id: str,course_id: str) -> list | E
         return ex
     
 if __name__ == '__main__':
-    print(show_classes_by_course(2,1102))
+    print(read_all_classes_by_course(2,1102))
