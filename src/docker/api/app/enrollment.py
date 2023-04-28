@@ -146,11 +146,16 @@ def read_all_enrollment_available_courses_by_student_id(studentID: str) -> list 
 def enroll_class(class_id: str,studentId: str) -> bool | Exception:
     try:
         schedule_clash=check_schedule_clash(class_id,studentId) 
-        if (schedule_clash==[]):
+        spaces=space_available_in_class(class_id)
+        if (schedule_clash==[] and spaces==True):
             db = Database()
             query = '''INSERT INTO student_class (student_id,class_id)
                         VALUES (?,?)'''
+            query2 = '''UPDATE class
+                        SET max_student_capacity = max_student_capacity-1
+                        WHERE class.id=?;'''
             db.cursor.execute(query,studentId,class_id)
+            db.cursor.execute(query2,class_id)
             db.cursor.commit()
             return True  # devuelve el resultado de la consulta
         else:
@@ -159,13 +164,31 @@ def enroll_class(class_id: str,studentId: str) -> bool | Exception:
         print(ex)
         return ex
     
-def unenroll_class(class_id: str) -> bool | Exception:
+def unenroll_class(class_id: str,studentId: str) -> bool | Exception:
     try:
         db = Database()
-        query = 'DELETE FROM student_class WHERE student_class.class_id = ?'
-        db.cursor.execute(query, class_id)
+        query = '''DELETE FROM student_class WHERE student_class.class_id = ? AND student_class.student_id=?'''
+        query2 = '''UPDATE class
+                        SET max_student_capacity = max_student_capacity+1
+                        WHERE class.id=?;'''
+        db.cursor.execute(query, class_id,studentId)
+        db.cursor.execute(query2,class_id)
         db.cursor.commit()
         return True
+    except Exception as ex:
+        print(ex)
+        return ex
+    
+def space_available_in_class(class_id: str) -> bool | Exception:
+    try:
+        db = Database()
+        query = 'SELECT max_student_capacity FROM class WHERE class.id=?'
+        db.cursor.execute(query, class_id)
+        result = db.cursor.fetchone()[0]
+        if (result>0):
+            return True
+        else:
+            return False
     except Exception as ex:
         print(ex)
         return ex
