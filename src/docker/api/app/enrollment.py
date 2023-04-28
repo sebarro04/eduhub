@@ -250,5 +250,28 @@ def enrollment_end_date(enrollment_period_id: str) -> str | Exception:
         print(ex)
         return ex
     
+
+def show_classes_by_course(enrollment_period_id: str,course_id: str) -> list | Exception:
+    try:
+        db = Database()
+        query = '''DECLARE @period_id_current int
+                SELECT @period_id_current=enrollment_period.period_id
+                FROM enrollment_period
+                WHERE enrollment_period.id=?
+
+                SELECT class.id,class.professor_id,class.max_student_capacity
+                FROM course
+                INNER JOIN class ON course.id=class.course_id 
+                INNER JOIN enrollment_period ON class.period_id= enrollment_period.period_id
+                WHERE course.id =?
+                AND class.period_id = @period_id_current'''
+        db.cursor.execute(query, enrollment_period_id,course_id)
+        result = db.cursor.fetchone()[0]
+        result = db.cursor.fetchall()
+        return db.jsonify_query_result_headers(result)
+    except Exception as ex:
+        print(ex)
+        return ex
+    
 if __name__ == '__main__':
-    print(enrollment_start_date(5))
+    print(show_classes_by_course(2,1102))

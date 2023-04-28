@@ -9,6 +9,6 @@
 - [X] read_all_enrollments_by_student_id(studentId) 
 - [X] enroll_class
 - [X] unenroll_class
-- [x] Obtener hora inicio/fin de una matricula
-- [X] Obtener fecha inicio/fin de una matricula
-- [ ] Mostrar clases de un curso(IN PROCESS-SOFI)
+- [x] get the start/end time of an enrollment
+- [X] get the start/end date of an enrollment
+- [X] show classes by course

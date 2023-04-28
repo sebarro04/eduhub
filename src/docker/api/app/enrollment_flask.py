@@ -5,6 +5,15 @@ import enrollment
 ENROLLMENT_BLUEPRINT = Blueprint('ENROLLMENT_BLUEPRINT', __name__)
 
 
+@ENROLLMENT_BLUEPRINT.route('/eduhub/enrollments/show_classes/<enrollment_period_id>/<course_id>', methods = ['GET'])
+def show_classes_by_course(enrollment_period_id,course_id):
+    result = enrollment.show_classes_by_course(enrollment_period_id,course_id)
+    if isinstance(result, Exception):
+        return 'Error with the database', 500 
+    response = jsonify(result)
+    response.status_code = 200
+    return response
+
 @ENROLLMENT_BLUEPRINT.route('/eduhub/enrollments/start_date/<enrollment_period_id>', methods = ['GET'])
 def enrollment_start_date(enrollment_period_id):
     result = enrollment.enrollment_start_date(enrollment_period_id)
