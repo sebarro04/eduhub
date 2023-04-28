@@ -4,16 +4,16 @@ import enrollment
 
 ENROLLMENT_BLUEPRINT = Blueprint('ENROLLMENT_BLUEPRINT', __name__)
 
-@ENROLLMENT_BLUEPRINT.route('/eduhub/unenrollment_a_class/<class_id>', methods = ['DELETE'])
+@ENROLLMENT_BLUEPRINT.route('/eduhub/enrollments/unenroll_a_class/<class_id>/<student_id>', methods = ['DELETE'])
 def unenroll_class(class_id):
-    result = enrollment.unenroll_class(class_id)
+    result = enrollment.unenroll_class(class_id,student_id)
     if isinstance(result, Exception):
         return 'Error with the database', 500 
     response = jsonify(result)
     response.status_code = 200
     return response
 
-@ENROLLMENT_BLUEPRINT.route('/eduhub/enrollment_a_class/<class_id>/<student_id>', methods = ['POST'])
+@ENROLLMENT_BLUEPRINT.route('/eduhub/enrollments/enroll_a_class/<class_id>/<student_id>', methods = ['POST'])
 def enroll_class(class_id,student_id):
     result = enrollment.enroll_class(class_id,student_id)
     if isinstance(result, Exception):
