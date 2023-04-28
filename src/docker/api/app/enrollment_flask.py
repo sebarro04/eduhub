@@ -13,7 +13,7 @@ def enroll_class(class_id,student_id):
     response.status_code = 200
     return response
 
-@ENROLLMENT_BLUEPRINT.route('/eduhub/enrollment/<student_id>/<student_enrollment_period_id>', methods = ['GET'])
+@ENROLLMENT_BLUEPRINT.route('/eduhub/enrollments/student-hour/<student_id>/<student_enrollment_period_id>', methods = ['GET'])
 def calculate_enrollment_hour_by_student_id(student_id,student_enrollment_period_id):
     result = enrollment.calculate_enrollment_hour_by_student_id(student_id,student_enrollment_period_id)
     if isinstance(result, Exception):
@@ -22,7 +22,7 @@ def calculate_enrollment_hour_by_student_id(student_id,student_enrollment_period
     response.status_code = 200
     return response
 
-@ENROLLMENT_BLUEPRINT.route('/eduhub/enrollment_load/<student_id>', methods = ['GET'])
+@ENROLLMENT_BLUEPRINT.route('/eduhub/enrollments/<student_id>', methods = ['GET'])
 def read_all_enrollments_by_student_id(student_id):
     result = enrollment.read_all_enrollments_by_student_id(student_id)    
     if isinstance(result, Exception):
