@@ -30,6 +30,8 @@ def read_all_enrollments_by_student_id(studentId: str) -> list | Exception:
         return ex
     
 
+    
+
 def check_schedule_clash(new_class_id: str,studentId: str) -> list | Exception:
     try:
         db = Database()
@@ -141,5 +143,21 @@ def read_all_enrollment_available_courses_by_student_id(studentID: str) -> list 
         print(ex)
         return ex
     
+def enroll_class(class_id: str,studentId: str) -> bool | Exception:
+    try:
+        schedule_clash=check_schedule_clash(class_id,studentId) 
+        if (schedule_clash==[]):
+            db = Database()
+            query = '''INSERT INTO student_class (student_id,class_id)
+                        VALUES (?,?)'''
+            db.cursor.execute(query,studentId,class_id)
+            db.cursor.commit()
+            return True  # devuelve el resultado de la consulta
+        else:
+            return False
+    except Exception as ex:
+        print(ex)
+        return ex
+
 if __name__ == '__main__':
-    print(check_schedule_clash(3,12))
+    print(enroll_class(3,12))
