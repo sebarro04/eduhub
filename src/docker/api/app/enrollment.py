@@ -50,62 +50,66 @@ def calculate_enrollment_hour_by_student_id(student_id : str,student_enrollment_
         print(ex)
         return ex
     
-def calculate_period_average(studentID: int) -> int | Exception:
+def calculate_period_average(studentID: str) -> int | Exception:
     try:
         db = Database()
         query = '''
-                DECLARE @last_period_id INT
-                SELECT TOP 1 @last_period_id = p.id
-                FROM period p
-                WHERE p.end_date = (SELECT MAX(end_date) FROM period)
-                AND EXISTS (
-                    SELECT 1
-                    FROM grade_record gr
-                    WHERE gr.student_id = ?
-                    AND gr.period_id = p.id
-                )
-
-                IF @last_period_id IS NULL
-                BEGIN
-                    SELECT 100 AS 'period_average'
-                END
-                ELSE
-                BEGIN
-                    DECLARE @total_credits INT
-                    SELECT @total_credits = SUM(c.credits)
-                    FROM course c
-                    INNER JOIN grade_record gr ON c.id = gr.course_id
-                    WHERE gr.period_id = @last_period_id
-
-                    DECLARE @weighted_sum INT
-                    SELECT @weighted_sum = SUM(gr.grade * c.credits)
-                    FROM course c
-                    INNER JOIN grade_record gr ON c.id = gr.course_id
-                    WHERE gr.student_id = ? AND gr.period_id = @last_period_id
-
-                    SELECT @weighted_sum / @total_credits AS 'period_average'
-                END
+                SELECT TOP 1 (SUM(gr.grade * c.credits) / SUM(c.credits)) AS period_student_average
+                FROM grade_record gr 
+                INNER JOIN course c ON gr.course_id = c.id
+                INNER JOIN period p ON gr.period_id = p.id
+                WHERE gr.student_id = ?
+                GROUP BY p.end_date
+                ORDER BY p.end_date DESC
                 '''
-        db.cursor.execute(query, (studentID, studentID))
+        db.cursor.execute(query, (studentID))
         result = db.cursor.fetchone()[0]  # obtiene el resultado de la consulta
         db.cursor.commit()
         return result  # devuelve el resultado de la consulta
     except Exception as ex:
         print(ex)
         return ex
-'''    
-DECLARE @student_id VARCHAR(128) = '2021023226'
-SELECT c.id, c.name, c.credits
-FROM course c
-INNER JOIN curriculum_course cc ON cc.course_id = c.id
-INNER JOIN curriculum_course_prerequisite ccp ON ccp.course_id = c.id AND ccp.curriculum_id = cc.curriculum_id
-LEFT JOIN grade_record gr ON gr.course_id = c.id AND gr.student_id = @student_id
-LEFT JOIN grade_record gr_prereq ON gr_prereq.course_id = ccp.course_prerequisite_id AND gr_prereq.student_id = @student_id
-LEFT JOIN student_curriculum sc ON sc.curriculum_id = cc.curriculum_id AND sc.student_id = @student_id
-WHERE (ccp.course_prerequisite_id IS NULL AND (gr.grade IS NULL OR gr.grade < 65.5))
-    OR (ccp.course_prerequisite_id IS NOT NULL AND gr_prereq.grade IS NOT NULL AND gr_prereq.grade >= 65.5 AND (gr.grade IS NULL OR gr.grade < 65.5))
-    OR (gr.student_id = @student_id AND gr.grade < 65.5 AND c.id IN (SELECT course_id FROM curriculum_course WHERE curriculum_id = sc.curriculum_id))
-'''
-
+    
+def read_all_enrollment_available_courses_by_student_id(studentID: str) -> list | Exception:
+    try:
+        db = Database()
+        query = '''
+                SELECT c.id, c.name
+                FROM curriculum_course cc
+                INNER JOIN course c ON cc.course_id = c.id
+                WHERE cc.curriculum_id = (
+                    SELECT sc.curriculum_id
+                    FROM student_curriculum sc
+                    WHERE sc.student_id = ?
+                )
+                AND c.id NOT IN (
+                    SELECT ccp.course_id
+                    FROM curriculum_course_prerequisite ccp
+                )
+                AND c.id NOT IN (
+                    SELECT gr.course_id
+                    FROM grade_record gr
+                    WHERE gr.student_id = ? AND gr.grade >= 65.7
+                )
+                UNION
+                SELECT c.id, c.name 
+                FROM course c
+                WHERE c.id IN ((SELECT ccp.course_id
+                            FROM curriculum_course_prerequisite ccp
+                            INNER JOIN course c ON ccp.course_prerequisite_id = c.id
+                            INNER JOIN grade_record gr ON c.id = gr.course_id
+                            WHERE gr.student_id = ? AND gr.grade >= 65))
+                            AND c.id NOT IN (
+                                SELECT gr.course_id
+                                FROM grade_record gr
+                                WHERE gr.student_id = ? AND gr.grade >= 65.7)
+                '''
+        db.cursor.execute(query,(studentID, studentID, studentID, studentID))
+        result = db.cursor.fetchall()
+        return db.jsonify_query_result_headers(result)
+    except Exception as ex:
+        print(ex)
+        return ex
+    
 if __name__ == '__main__':
-    print(calculate_period_average(12))
+    print(calculate_period_average(2021023226))
