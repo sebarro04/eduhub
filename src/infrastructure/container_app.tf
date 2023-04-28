@@ -59,6 +59,10 @@ template {
         name  = "SQL_SERVER_DRIVER"
         value = "{ODBC Driver 18 for SQL Server}"
       }
+      env {
+        name  = "BLOB_STORAGE_URL"
+        value = "https://filesmanagerproyecto1.blob.core.windows.net"
+      }
 #      liveness_probe {
 #        port      = 5000
 #        timeout   = 5
