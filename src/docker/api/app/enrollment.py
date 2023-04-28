@@ -99,13 +99,16 @@ def calculate_period_average(studentID: str) -> int | Exception:
         print(ex)
         return ex
     
-def read_all_enrollment_available_courses_by_student_id(studentID: str) -> list | Exception:
+def read_all_enrollment_available_courses_by_student_id(studentID: str, periodID: int) -> list | Exception:
     try:
         db = Database()
         query = '''
                 SELECT c.id, c.name
                 FROM curriculum_course cc
                 INNER JOIN course c ON cc.course_id = c.id
+                INNER JOIN class cl ON c.id = cl.course_id
+                INNER JOIN period_type pt ON c.period_type_id = pt.id
+                INNER JOIN period p ON pt.id = p.period_type_id
                 WHERE cc.curriculum_id = (
                     SELECT sc.curriculum_id
                     FROM student_curriculum sc
@@ -120,9 +123,16 @@ def read_all_enrollment_available_courses_by_student_id(studentID: str) -> list 
                     FROM grade_record gr
                     WHERE gr.student_id = ? AND gr.grade >= 65.7
                 )
+                AND p.id = ?
+                AND cl.period_id = ?
+
                 UNION
                 SELECT c.id, c.name 
-                FROM course c
+                FROM curriculum_course cc
+                INNER JOIN course c ON cc.course_id = c.id
+                INNER JOIN class cl ON c.id = cl.course_id
+                INNER JOIN period_type pt ON c.period_type_id = pt.id
+                INNER JOIN period p ON pt.id = p.period_type_id
                 WHERE c.id IN ((SELECT ccp.course_id
                             FROM curriculum_course_prerequisite ccp
                             INNER JOIN course c ON ccp.course_prerequisite_id = c.id
@@ -132,8 +142,10 @@ def read_all_enrollment_available_courses_by_student_id(studentID: str) -> list 
                                 SELECT gr.course_id
                                 FROM grade_record gr
                                 WHERE gr.student_id = ? AND gr.grade >= 65.7)
+                            AND p.id = ?
+                            AND cl.period_id = ?
                 '''
-        db.cursor.execute(query,(studentID, studentID, studentID, studentID))
+        db.cursor.execute(query,(studentID, studentID, periodID, periodID, studentID, studentID, periodID, periodID))
         result = db.cursor.fetchall()
         return db.jsonify_query_result_headers(result)
     except Exception as ex:
@@ -272,4 +284,4 @@ def read_all_classes_by_course(enrollment_period_id: str, course_id: str) -> lis
         return ex
     
 if __name__ == '__main__':
-    print(read_all_classes_by_course(2,1102))
+    print(read_all_enrollment_available_courses_by_student_id(2021023227, 7))
