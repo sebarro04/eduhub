@@ -193,5 +193,31 @@ def space_available_in_class(class_id: str) -> bool | Exception:
         print(ex)
         return ex
 
+def enrollment_start_time(enrollment_period_id: str) -> float | Exception:
+    try:
+        db = Database()
+        query = '''SELECT DATEPART(hour, start_datetime)
+                FROM enrollment_period
+                WHERE enrollment_period.id=?'''
+        db.cursor.execute(query, enrollment_period_id)
+        result = db.cursor.fetchone()[0]
+        return result
+    except Exception as ex:
+        print(ex)
+        return ex
+    
+def enrollment_end_time(enrollment_period_id: str) -> float | Exception:
+    try:
+        db = Database()
+        query = '''SELECT DATEPART(hour, end_datetime)
+                FROM enrollment_period
+                WHERE enrollment_period.id=?'''
+        db.cursor.execute(query, enrollment_period_id)
+        result = db.cursor.fetchone()[0]
+        return result
+    except Exception as ex:
+        print(ex)
+        return ex
+    
 if __name__ == '__main__':
-    print(enroll_class(3,12))
+    print(enrollment_end_time(5))
