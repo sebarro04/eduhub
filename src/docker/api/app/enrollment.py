@@ -158,6 +158,17 @@ def enroll_class(class_id: str,studentId: str) -> bool | Exception:
     except Exception as ex:
         print(ex)
         return ex
+    
+def unenroll_class(class_id: str) -> bool | Exception:
+    try:
+        db = Database()
+        query = 'DELETE FROM student_class WHERE student_class.class_id = ?'
+        db.cursor.execute(query, class_id)
+        db.cursor.commit()
+        return True
+    except Exception as ex:
+        print(ex)
+        return ex
 
 if __name__ == '__main__':
     print(enroll_class(3,12))
