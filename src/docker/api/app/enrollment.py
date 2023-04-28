@@ -29,9 +29,6 @@ def read_all_enrollments_by_student_id(studentId: str) -> list | Exception:
         print(ex)
         return ex
     
-
-    
-
 def check_schedule_clash(new_class_id: str,studentId: str) -> list | Exception:
     try:
         db = Database()
@@ -250,11 +247,11 @@ def enrollment_end_date(enrollment_period_id: str) -> str | Exception:
         print(ex)
         return ex
     
-
-def read_all_classes_by_course(enrollment_period_id: str,course_id: str) -> list | Exception:
+def read_all_classes_by_course(enrollment_period_id: str, course_id: str) -> list | Exception:
     try:
         db = Database()
-        query = '''DECLARE @period_id_current int
+        query = '''
+                DECLARE @period_id_current int
                 SELECT @period_id_current=enrollment_period.period_id
                 FROM enrollment_period
                 WHERE enrollment_period.id=?
@@ -264,7 +261,8 @@ def read_all_classes_by_course(enrollment_period_id: str,course_id: str) -> list
                 INNER JOIN class ON course.id=class.course_id 
                 INNER JOIN enrollment_period ON class.period_id= enrollment_period.period_id
                 WHERE course.id =?
-                AND class.period_id = @period_id_current'''
+                AND class.period_id = @period_id_current
+                '''
         db.cursor.execute(query, enrollment_period_id,course_id)
         result = db.cursor.fetchone()[0]
         result = db.cursor.fetchall()
