@@ -21,7 +21,7 @@ def read_all_enrollments_by_student_id(studentId: str) -> list | Exception:
         query = '''SELECT enrollment_period.name, enrollment_period.start_datetime, enrollment_period.end_datetime, enrollment_period.is_open, enrollment_period.period_id
                 FROM student_enrollment_period 
                 INNER JOIN enrollment_period ON student_enrollment_period.enrollment_period_id = enrollment_period.id AND enrollment_period.is_open = 1
-                WHERE student_enrollment_period.student_id =?'''
+                WHERE student_enrollment_period.student_id = ?'''
         db.cursor.execute(query,studentId)
         result = db.cursor.fetchall()
         return db.jsonify_query_result_headers(result)
