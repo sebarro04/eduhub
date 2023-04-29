@@ -5,6 +5,15 @@ import enrollment
 ENROLLMENT_BLUEPRINT = Blueprint('ENROLLMENT_BLUEPRINT', __name__)
 
 
+@ENROLLMENT_BLUEPRINT.route('/eduhub/enrollments/report/<student_id>/<enrollment_period_id>', methods = ['GET'])
+def generate_enrollment_report(student_id,enrollment_period_id):
+    result = enrollment.generate_enrollment_report(student_id,enrollment_period_id)
+    if isinstance(result, Exception):
+        return 'Error with the database', 500 
+    response = jsonify(result)
+    response.status_code = 200
+    return response
+
 @ENROLLMENT_BLUEPRINT.route('/eduhub/enrollments/course-classes/<enrollment_period_id>/<course_id>', methods = ['GET'])
 def read_all_classes_by_course(enrollment_period_id,course_id):
     result = enrollment.read_all_classes_by_course(enrollment_period_id,course_id)
@@ -86,9 +95,9 @@ def read_all_enrollments_by_student_id(student_id):
     response.status_code = 200
     return response
 
-@ENROLLMENT_BLUEPRINT.route('/eduhub/enrollments/available-courses/<student_id>/<enrollment_period_id>', methods = ['GET'])
-def read_all_enrollment_courses_by_student_id(student_id, enrollment_period_id):
-    result = enrollment.read_all_enrollment_available_courses_by_student_id(student_id, enrollment_period_id)
+@ENROLLMENT_BLUEPRINT.route('/eduhub/enrollments/available-courses/<student_id>', methods = ['GET'])
+def read_all_enrollment_courses_by_student_id(student_id):
+    result = enrollment.read_all_enrollment_available_courses_by_student_id(student_id)
     if isinstance(result, Exception):
         return 'Error with the database', 500 
     response = jsonify(result)

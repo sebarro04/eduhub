@@ -291,7 +291,7 @@ def read_all_classes_by_course(enrollment_period_id: str, course_id: str) -> lis
                 AND ep.id = ?
                 GROUP BY cl.id, cl.course_id, cl.period_id, cl.professor_id, cl.max_student_capacity
                 '''
-        db.cursor.execute(query, (course_id, enrollment_period_id,))
+        db.cursor.execute(query, (course_id, enrollment_period_id))
         result = db.cursor.fetchall()
         return db.jsonify_query_result_headers(result)
     except Exception as ex:
