@@ -26,3 +26,14 @@ def read_user_roles(user_id: str) -> list | Exception:
     except Exception as ex:
         print(ex)
         return ex
+    
+def read_roles() -> list | Exception:
+    try:
+        db = Database()
+        query = 'SELECT id, name FROM role ORDER BY id'
+        db.cursor.execute(query)
+        result = db.cursor.fetchall()
+        return db.jsonify_query_result_headers(result)
+    except Exception as ex:
+        print(ex)
+        return ex

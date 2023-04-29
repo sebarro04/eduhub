@@ -1,3 +1,4 @@
 src/infrastructure/.terraform
 src/infrastructure/.terraform.lock.hcl
-*.pyc
+src/docker/api/app/tmp
+src/docker/api/app/__pycache__

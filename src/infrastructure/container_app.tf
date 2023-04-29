@@ -61,7 +61,7 @@ template {
       }
       env {
         name  = "BLOB_STORAGE_URL"
-        value = "https://filesmanagerproyecto1.blob.core.windows.net"
+        value = "https://filesmanagergamma.blob.core.windows.net"
       }
 #      liveness_probe {
 #        port      = 5000

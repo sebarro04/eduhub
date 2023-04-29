@@ -26,3 +26,12 @@ def read_user_roles(user_id):
     response = jsonify(result)
     response.status_code = 200
     return response
+
+@USER_ROLE_BLUEPRINT.route('/eduhub/roles', methods = ['GET'])
+def read_roles():
+    result = user_role.read_roles()
+    if isinstance(result, Exception):
+        return 'Error with the database', 500
+    response = jsonify(result)
+    response.status_code = 200
+    return response
