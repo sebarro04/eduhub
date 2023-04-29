@@ -99,10 +99,16 @@ def calculate_period_average(studentID: str) -> int | Exception:
         print(ex)
         return ex
     
-def read_all_enrollment_available_courses_by_student_id(studentID: str, periodID: int) -> list | Exception:
+def read_all_enrollment_available_courses_by_student_id(studentID: str, enrollment_period_id: int) -> list | Exception:
     try:
         db = Database()
         query = '''
+                DECLARE @period_id INT
+                SET @period_id = (SELECT p.id
+                FROM enrollment_period ep
+                INNER JOIN period p ON ep.period_id = p.id
+                WHERE ep.id = ?)
+
                 SELECT c.id, c.name
                 FROM curriculum_course cc
                 INNER JOIN course c ON cc.course_id = c.id
@@ -123,8 +129,8 @@ def read_all_enrollment_available_courses_by_student_id(studentID: str, periodID
                     FROM grade_record gr
                     WHERE gr.student_id = ? AND gr.grade >= 65.7
                 )
-                AND p.id = ?
-                AND cl.period_id = ?
+                AND p.id = @period_id
+                AND cl.period_id = @period_id
 
                 UNION
                 SELECT c.id, c.name 
@@ -142,33 +148,43 @@ def read_all_enrollment_available_courses_by_student_id(studentID: str, periodID
                                 SELECT gr.course_id
                                 FROM grade_record gr
                                 WHERE gr.student_id = ? AND gr.grade >= 65.7)
-                            AND p.id = ?
-                            AND cl.period_id = ?
+                            AND p.id = @period_id
+                            AND cl.period_id = @period_id
                 '''
-        db.cursor.execute(query,(studentID, studentID, periodID, periodID, studentID, studentID, periodID, periodID))
+        db.cursor.execute(query,(enrollment_period_id, studentID, studentID, studentID, studentID))
         result = db.cursor.fetchall()
         return db.jsonify_query_result_headers(result)
     except Exception as ex:
         print(ex)
         return ex
     
-def enroll_class(class_id: str,studentId: str) -> bool | Exception:
+def enroll_class(class_id: str,studentId: str, enrollment_period_id: int) -> str | Exception:
     try:
         schedule_clash=check_schedule_clash(class_id,studentId) 
         spaces=space_available_in_class(class_id)
-        if (schedule_clash==[] and spaces==True):
-            db = Database()
-            query = '''INSERT INTO student_class (student_id,class_id)
-                        VALUES (?,?)'''
-            query2 = '''UPDATE class
-                        SET max_student_capacity = max_student_capacity-1
-                        WHERE class.id=?;'''
-            db.cursor.execute(query,studentId,class_id)
-            db.cursor.execute(query2,class_id)
-            db.cursor.commit()
-            return True  # devuelve el resultado de la consulta
+        if (schedule_clash==[]):
+            if (spaces==True):
+                db = Database()
+                query = '''INSERT INTO student_class (student_id,class_id)
+                            VALUES (?,?)'''
+                query2 = '''UPDATE class
+                            SET max_student_capacity = max_student_capacity-1
+                            WHERE class.id=?;'''
+                db.cursor.execute(query,studentId,class_id)
+                db.cursor.execute(query2,class_id)
+                db.cursor.commit()
+                return 'Matricula Exitosa'
+            else:
+                db = Database()
+                query = '''
+                        INSERT INTO student_waiting_enrollment (student_id, enrollment_period_id, class_id)
+                        VALUES (?, ?, ?)
+                        '''
+                db.cursor.execute(query,(studentId, enrollment_period_id, class_id))
+                db.cursor.commit()
+                return 'Matricula Tentativa Exitosa'
         else:
-            return False
+            return 'Choque de horario'
     except Exception as ex:
         print(ex)
         return ex
@@ -263,20 +279,19 @@ def read_all_classes_by_course(enrollment_period_id: str, course_id: str) -> lis
     try:
         db = Database()
         query = '''
-                DECLARE @period_id_current int
-                SELECT @period_id_current=enrollment_period.period_id
-                FROM enrollment_period
-                WHERE enrollment_period.id=?
-
-                SELECT class.id,class.professor_id,class.max_student_capacity
-                FROM course
-                INNER JOIN class ON course.id=class.course_id 
-                INNER JOIN enrollment_period ON class.period_id= enrollment_period.period_id
-                WHERE course.id =?
-                AND class.period_id = @period_id_current
+                SELECT cl.*, 
+                    STRING_AGG(CONCAT(d.name, ': ', CONVERT(varchar(5), s.start_time, 108), '-', CONVERT(varchar(5), s.end_time, 108)), '; ') AS class_schedule
+                FROM course c
+                INNER JOIN class cl ON c.id = cl.course_id
+                INNER JOIN schedule s ON s.class_id = cl.id
+                INNER JOIN day d ON d.id = s.day_id
+                INNER JOIN period p ON cl.period_id = p.id
+                INNER JOIN enrollment_period ep ON p.id = ep.period_id
+                WHERE c.id = ?
+                AND ep.id = ?
+                GROUP BY cl.id, cl.course_id, cl.period_id, cl.professor_id, cl.max_student_capacity
                 '''
-        db.cursor.execute(query, enrollment_period_id,course_id)
-        result = db.cursor.fetchone()[0]
+        db.cursor.execute(query, (course_id, enrollment_period_id,))
         result = db.cursor.fetchall()
         return db.jsonify_query_result_headers(result)
     except Exception as ex:
@@ -284,4 +299,4 @@ def read_all_classes_by_course(enrollment_period_id: str, course_id: str) -> lis
         return ex
     
 if __name__ == '__main__':
-    print(read_all_enrollment_available_courses_by_student_id(2021023227, 7))
+    print(read_all_classes_by_course(6, '101'))
