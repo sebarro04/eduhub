@@ -13,8 +13,6 @@ from Database import Database
 BLOB_STORAGE_URL = config('BLOB_STORAGE_URL')
 DEFAULT_CREDENTIAL = DefaultAzureCredential(exclude_shared_token_cache_credential = True, exclude_visual_studio_code_credential = True, exclude_powershell_credential = True)
 BLOB_SERVICE_CLIENT = BlobServiceClient(BLOB_STORAGE_URL, credential=DEFAULT_CREDENTIAL)
-
-logging.basicConfig(filename="src/docker/api/app/tmp/app-log.txt", level=logging.DEBUG, format="%(asctime)s %(message)s", filemode='w')
     
 def create_file(filename: str, description: str | None, file_url: str, user_id: str, creation_datetime: str):
     try:
@@ -29,7 +27,6 @@ def create_file(filename: str, description: str | None, file_url: str, user_id: 
         return True
     except Exception as ex:
         print(ex)
-        logging.debug(str(ex))
         return Exception('Error inserting the file data to the database')
     
 def read_file_url(file_id: int) -> str | Exception:
@@ -40,7 +37,6 @@ def read_file_url(file_id: int) -> str | Exception:
         return db.cursor.fetchall()[0][0] # file url
     except Exception as ex:
         print(ex)
-        logging.debug(str(ex))
         return Exception('Error reading the file url from the database ')
     
 def read_filename(file_id: int) -> str | Exception:
@@ -51,7 +47,6 @@ def read_filename(file_id: int) -> str | Exception:
         return db.cursor.fetchall()[0][0] # return result query
     except Exception as ex:
         print(ex)
-        logging.debug(str(ex))
         return Exception('Error reading the filename from the database')
     
 def read_latest_files(user_id: str) -> list | Exception:
@@ -72,7 +67,6 @@ def read_latest_files(user_id: str) -> list | Exception:
         return db.jsonify_query_result_headers(result)
     except Exception as ex:
         print(ex)
-        logging.debug(str(ex))
         return Exception('Error reading the file data from the database')
     
 def read_file_history(file_id: int) -> list | Exception:
@@ -89,7 +83,6 @@ def read_file_history(file_id: int) -> list | Exception:
         return db.jsonify_query_result_headers(result)
     except Exception as ex:
         print(ex)
-        logging.debug(str(ex))
         return Exception('Error reading the file data from the database')
     
 def update_file_description(file_id: int, file_description: str) -> bool | Exception:
@@ -105,7 +98,6 @@ def update_file_description(file_id: int, file_description: str) -> bool | Excep
         return True
     except Exception as ex:
         print(ex)
-        logging.debug(str(ex))
         return Exception('Error updating the file description in the database')
     
 def delete_file(file_id: int) -> bool | Exception:
@@ -117,7 +109,6 @@ def delete_file(file_id: int) -> bool | Exception:
         return True
     except Exception as ex:
         print(ex)
-        logging.debug(str(ex))
         return Exception('Error deleting the file data from the database')
 
 def upload_blob(file: FileStorage, description: str | None, user_id: str) -> bool | Exception:
@@ -136,7 +127,6 @@ def upload_blob(file: FileStorage, description: str | None, user_id: str) -> boo
         return True
     except Exception as ex:
         print(ex)
-        logging.debug(str(ex))
         return Exception('Error uploading the file to Azure')
 
 def download_blob(file_id: int) -> io.BytesIO | Exception:
@@ -150,7 +140,6 @@ def download_blob(file_id: int) -> io.BytesIO | Exception:
         return stream
     except Exception as ex:
         print(ex)
-        logging.debug(str(ex))
         return Exception('Error downloading the file from Azure')
     
 def delete_blob(file_id: int) -> bool | Exception:
@@ -164,7 +153,6 @@ def delete_blob(file_id: int) -> bool | Exception:
         return True
     except Exception as ex:
         print(ex)
-        logging.debug(str(ex))
         return Exception('Error deleting the file from Azure')
     
 if __name__ == '__main__':

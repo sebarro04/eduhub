@@ -3,5 +3,3 @@ pyodbc
 azure.storage.blob
 azure.identity
 python-decouple
-logging
-mimetypes
