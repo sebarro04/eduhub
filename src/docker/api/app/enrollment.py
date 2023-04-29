@@ -319,4 +319,4 @@ def generate_enrollment_report( student_id: str,enrollment_period_id: str) -> li
         return ex
     
 if __name__ == '__main__':
-    print(generate_enrollment_report(12,2))
+    print(enroll_class(2, '2021023224', 7))
