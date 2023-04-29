@@ -10,5 +10,6 @@
 - [X] get the start/end date of an enrollment
 - [x] read all classes by course
 - [x] read_all_enrollment_courses_by_student_id (student_id: str)  (In progress Gerald)
-- [ ] generate_enrollment_report()
+- [X] generate_enrollment_report()
 - [ ] tentative_enrollment()
+- [ ]show_reviews    
