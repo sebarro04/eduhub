@@ -298,5 +298,25 @@ def read_all_classes_by_course(enrollment_period_id: str, course_id: str) -> lis
         print(ex)
         return ex
     
+
+def generate_enrollment_report( student_id: str,enrollment_period_id: str) -> list | Exception:
+    try:
+        db = Database()
+        query = '''
+                SELECT class.course_id, course.name, class.period_id, class.professor_id
+                FROM student_class 
+                INNER JOIN class ON student_class.class_id=class.id 
+                INNER JOIN course ON class.course_id=course.id
+                INNER JOIN enrollment_period ON class.period_id=enrollment_period.period_id
+                WHERE student_class.student_id=?
+                AND enrollment_period.id=?
+                '''
+        db.cursor.execute(query,student_id, enrollment_period_id)
+        result = db.cursor.fetchall()
+        return db.jsonify_query_result_headers(result)
+    except Exception as ex:
+        print(ex)
+        return ex
+    
 if __name__ == '__main__':
-    print(read_all_classes_by_course(6, '101'))
+    print(generate_enrollment_report(12,2))
