@@ -4,9 +4,9 @@ import enrollment
 
 ENROLLMENT_BLUEPRINT = Blueprint('ENROLLMENT_BLUEPRINT', __name__)
 
-@ENROLLMENT_BLUEPRINT.route('/eduhub/enrollments/report/<student_id>/<enrollment_period_id>', methods = ['GET'])
-def generate_enrollment_report(student_id,enrollment_period_id):
-    result = enrollment.generate_enrollment_report(student_id,enrollment_period_id)
+@ENROLLMENT_BLUEPRINT.route('/eduhub/enrollments/reviews/<class_id>', methods = ['GET'])
+def show_reviews(class_id):
+    result = enrollment.show_reviews(class_id)
     if isinstance(result, Exception):
         return 'Error with the database', 500 
     response = jsonify(result)
