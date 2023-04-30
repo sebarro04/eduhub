@@ -50,10 +50,6 @@ BEGIN
             INSERT INTO student_class (student_id, class_id)
             VALUES (@student_id, (SELECT id FROM inserted))
 
-            UPDATE class
-            SET max_student_capacity = max_student_capacity - 1
-            WHERE class.id = (SELECT id FROM inserted)
-
             DELETE FROM student_waiting_enrollment WHERE student_waiting_enrollment.student_id = @student_id
         END
     END
