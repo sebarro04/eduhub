@@ -1,0 +1,15 @@
+<template>
+    <div class="login-div center-div">
+        <h1>Administrador de Archivos EduHub</h1>
+        <form class="login-form" action="/" method="POST">            
+            
+            <label for="email_txt">Correo electrónico</label>
+            <input type="email" id="email_txt" name="email_txt" placeholder="juan@estudiantec.cr">
+            
+            <label for="password_txt">Contraseña</label>
+            <input type="password" id="password_txt" name="password_txt">              
+            
+            <button type="submit" class="btn">Iniciar Sesión</button>                
+        </form>
+    </div>
+</template>
