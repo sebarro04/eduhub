@@ -1,0 +1,21 @@
+.latest-files-table {
+    text-align: center;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.latest-files-table td {
+    padding: 16px;
+    border-bottom: 1px solid;
+}
+
+.file-history-table {
+    text-align: center;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.file-history-table td {
+    padding: 16px;
+    border-bottom: 1px solid;
+}

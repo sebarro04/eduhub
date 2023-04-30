@@ -1,7 +1,21 @@
 {
+  "name": "app",
+  "version": "1.0.0",
+  "description": "file manager for eduhub",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon app.js",
+    "start-server": "node app.js"
+  },
+  "author": "sebarro04",
+  "license": "ISC",
   "dependencies": {
     "body-parser": "^1.20.2",
+    "dotenv": "^16.0.3",
     "express": "^4.18.2",
-    "express-handlebars": "^7.0.7"
+    "express-handlebars": "^7.0.7",
+    "firebase": "^9.21.0",
+    "node-html-parser": "^6.1.5",
+    "nodemon": "^2.0.22"
   }
 }

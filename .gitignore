@@ -7,6 +7,7 @@ src/docker/api/app/__pycache__
 
 # file manager
 src/docker/file-manager/app/node_modules
+src/docker/file-manager/app/.env
 
 # commands
 src/docker/restart-containerapp.bat
