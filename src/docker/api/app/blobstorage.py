@@ -1,23 +1,25 @@
-from werkzeug.utils import secure_filename
 from werkzeug.datastructures import FileStorage
 from azure.identity import DefaultAzureCredential
 from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient
 from decouple import config
 from datetime import datetime
-import time
 import os
-import logging
 import io
 from Database import Database
 
 BLOB_STORAGE_URL = config('BLOB_STORAGE_URL')
 DEFAULT_CREDENTIAL = DefaultAzureCredential(exclude_shared_token_cache_credential = True, exclude_visual_studio_code_credential = True, exclude_powershell_credential = True)
 BLOB_SERVICE_CLIENT = BlobServiceClient(BLOB_STORAGE_URL, credential=DEFAULT_CREDENTIAL)
-    
-def create_file(filename: str, description: str | None, file_url: str, user_id: str, creation_datetime: str):
+
+def create_file_url(filename: str, current_time_ms: int) -> str:
+    name = os.path.splitext(filename)[0] # get filename without extension
+    ext = os.path.splitext(filename)[1] # get file extension
+    return name + f'-{current_time_ms}' + ext # file url
+
+def create_file(filename: str, description: str | None, file_url: str, user_id: str, creation_datetime: datetime) -> bool | Exception:
     try:
         db = Database()
-        if description != None:
+        if description != '':
             query = 'INSERT INTO [file] (name, description, url, user_id, creation_datetime) VALUES (?, ?, ?, ?, ?)'
             db.cursor.execute(query, filename, description, file_url, user_id, creation_datetime)
         else:
@@ -90,10 +92,11 @@ def update_file_description(file_id: int, file_description: str) -> bool | Excep
         db = Database()
         query = '''
                 UPDATE [file]
-                set description = ?
+                set description = ?,
+                    last_modified_datetime = ?
                 WHERE id = ?
                 '''
-        db.cursor.execute(query, file_description, file_id)
+        db.cursor.execute(query, file_description, datetime.now(), file_id)
         db.cursor.commit()
         return True
     except Exception as ex:
@@ -111,33 +114,22 @@ def delete_file(file_id: int) -> bool | Exception:
         print(ex)
         return Exception('Error deleting the file data from the database')
 
-def upload_blob(file: FileStorage, description: str | None, user_id: str) -> bool | Exception:
+def upload_blob(file: FileStorage, file_url: str) -> bool | Exception:
     try:
-        current_time_ms = time.time_ns() // 1000000
-        current_datetime = datetime.now()
-        new_filename = secure_filename(file.filename)
-        filename = os.path.splitext(new_filename)[0] # get filename without extension
-        file_ext = os.path.splitext(new_filename)[1] # get file extension
-        file_url = filename + f'-{current_time_ms}' + file_ext
         blob_client = BLOB_SERVICE_CLIENT.get_blob_client(container='documents', blob=file_url) 
         blob_client.upload_blob(file)
-        result = create_file(new_filename, description, file_url, user_id, current_datetime)
-        if isinstance(result, Exception):
-            return result
         return True
     except Exception as ex:
         print(ex)
         return Exception('Error uploading the file to Azure')
 
-def download_blob(file_id: int) -> io.BytesIO | Exception:
+def download_blob(file_id: int) -> bytes | Exception:
     try:       
         file_url = read_file_url(file_id)
         if isinstance(file_url, Exception):
             return file_url
         blob_client = BLOB_SERVICE_CLIENT.get_blob_client(container='documents', blob=file_url)
-        stream = io.BytesIO()
-        blob_client.download_blob().readinto(stream) # write blob bytes to stream
-        return stream
+        return blob_client.download_blob().readall() # blob bytes
     except Exception as ex:
         print(ex)
         return Exception('Error downloading the file from Azure')
@@ -146,10 +138,7 @@ def delete_blob(file_id: int) -> bool | Exception:
     try:
         file_url = read_file_url(file_id)
         blob_client = BLOB_SERVICE_CLIENT.get_blob_client(container='documents', blob=file_url) 
-        blob_client.delete_blob()
-        result = delete_file(file_id)
-        if isinstance(result, Exception):
-            return result        
+        blob_client.delete_blob()      
         return True
     except Exception as ex:
         print(ex)

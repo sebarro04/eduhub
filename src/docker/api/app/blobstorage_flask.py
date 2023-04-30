@@ -1,11 +1,15 @@
-from flask import Blueprint, jsonify, request, send_file
+from flask import Blueprint, jsonify, request, send_file, make_response
+from werkzeug.utils import secure_filename
 import mimetypes
+from datetime import datetime
+import time
+import io
 import blobstorage
 
 BLOBSTORAGE_BLUEPRINT = Blueprint('BLOBSTORAGE_BLUEPRINT', __name__)
 
 @BLOBSTORAGE_BLUEPRINT.route('/eduhub/files', methods=['POST']) 
-def upload_file():
+def upload_blob():
     if 'file' not in request.files:
         return 'No file part', 400
     if 'description' not in request.form:
@@ -19,17 +23,26 @@ def upload_file():
     user_id = request.form['user_id']
     if user_id == '':
         return 'Missing user_id', 400
-    result = blobstorage.upload_blob(file, description, user_id)
+    new_filename = secure_filename(file.filename)
+    current_time_ms = time.time_ns() // 1000000
+    current_datetime = datetime.now()
+    file_url = blobstorage.create_file_url(new_filename, current_time_ms)
+    result = blobstorage.upload_blob(file, file_url)
     if isinstance(result, Exception):
         response = jsonify(str(result))
         response.status_code = 500
         return response
+    result = blobstorage.create_file(new_filename, description, file_url, user_id, current_datetime)
+    if isinstance(result, Exception):
+        response = jsonify(str(result))
+        response.status_code = 500
+        return response  
     response = jsonify('File uploaded')
     response.status_code = 200
     return response
  
 @BLOBSTORAGE_BLUEPRINT.route('/eduhub/files/<int:file_id>', methods=['GET']) 
-def download_file(file_id): 
+def download_blob(file_id): 
     stream = blobstorage.download_blob(file_id)
     if isinstance(stream, Exception):
         response = jsonify(str(stream))
@@ -42,7 +55,11 @@ def download_file(file_id):
         return response
     mimetype = mimetypes.guess_type(filename)[0]
     print(stream, filename, mimetype)
-    return send_file(stream, mimetype=mimetype, download_name=filename, as_attachment=True)
+    """ response = make_response(stream)
+    response.headers.set('Content-Type', mimetype)
+    response.headers.set('Content-Disposition', 'attachment', filename=filename)
+    return response """
+    return send_file(io.BytesIO(stream), mimetype=mimetype, download_name=filename, as_attachment=True)
 
 @BLOBSTORAGE_BLUEPRINT.route('/eduhub/files/<string:user_id>', methods=['GET']) 
 def read_latest_files(user_id):
@@ -83,6 +100,11 @@ def update_file_description(file_id):
 @BLOBSTORAGE_BLUEPRINT.route('/eduhub/files/<int:file_id>', methods=['DELETE']) 
 def delete_blob(file_id):
     result = blobstorage.delete_blob(file_id)
+    if isinstance(result, Exception):
+        response = jsonify(str(result))
+        response.status_code = 500
+        return response
+    result = blobstorage.delete_file(file_id)
     if isinstance(result, Exception):
         response = jsonify(str(result))
         response.status_code = 500
