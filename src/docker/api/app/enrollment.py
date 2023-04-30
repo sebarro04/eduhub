@@ -318,5 +318,26 @@ def generate_enrollment_report( student_id: str,enrollment_period_id: str) -> li
         print(ex)
         return ex
     
+def show_reviews ( class_id: str) -> list | Exception:
+    try:
+        db = Database()
+        query = '''
+                DECLARE @professor_id VARCHAR(128)
+                SELECT @professor_id=professor_id  
+                FROM class
+                WHERE class.id=?
+
+                SELECT class_rating.comment 
+                FROM class
+                INNER JOIN class_rating ON class.id=class_rating.class_id
+                WHERE class.professor_id= @professor_id
+                '''
+        db.cursor.execute(query,class_id)
+        result = db.cursor.fetchall()
+        return db.jsonify_query_result_headers(result)
+    except Exception as ex:
+        print(ex)
+        return ex
+    
 if __name__ == '__main__':
     print(enroll_class(2, '2021023224', 7))

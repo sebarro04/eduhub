@@ -32,7 +32,7 @@ AS
     END
 GO
 
-CREATE TRIGGER trg_update_class_capacity
+CREATE OR ALTER TRIGGER tr_class_au
 ON class
 AFTER UPDATE
 AS
@@ -58,3 +58,4 @@ BEGIN
         END
     END
 END
+GO
