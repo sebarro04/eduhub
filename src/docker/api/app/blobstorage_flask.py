@@ -64,7 +64,8 @@ def read_latest_files(user_id):
         response = jsonify(str(result))
         response.status_code = 500
         return response
-    response = jsonify(result)
+    json = {'latest_files': result}
+    response = jsonify(json)
     response.status_code = 200
     return response
 
@@ -75,7 +76,8 @@ def read_file_history(file_id):
         response = jsonify(str(result))
         response.status_code = 500
         return response
-    response = jsonify(result)
+    json = {'file_history': result}
+    response = jsonify(json)
     response.status_code = 200
     return response
 
