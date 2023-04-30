@@ -313,10 +313,12 @@ def generate_enrollment_report( student_id: str,enrollment_period_id: str) -> li
     try:
         db = Database()
         query = '''
-                SELECT class.course_id, course.name, class.period_id, class.professor_id
+                SELECT class.course_id, course.name, class.period_id, class.professor_id, schedule.start_time,schedule.end_time, day.name
                 FROM student_class 
                 INNER JOIN class ON student_class.class_id=class.id 
                 INNER JOIN course ON class.course_id=course.id
+                INNER JOIN schedule ON class.id=schedule.class_id
+                INNER JOIN day ON schedule.day_id=day.id
                 INNER JOIN enrollment_period ON class.period_id=enrollment_period.period_id
                 WHERE student_class.student_id=?
                 AND enrollment_period.id=?
@@ -350,5 +352,5 @@ def show_reviews ( class_id: str) -> list | Exception:
         return ex
     
 if __name__ == '__main__':
-    print(unenroll_class('0202', 'I4jurZC2gpNEvpnWGb9iYQkVpXy1'))
+    print(generate_enrollment_report('2021023224', '8'))
     
