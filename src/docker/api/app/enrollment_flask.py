@@ -67,8 +67,14 @@ def enrollment_end_time(enrollment_period_id):
     response.status_code = 200
     return response
 
-@ENROLLMENT_BLUEPRINT.route('/eduhub/enrollments/enroll-class/<class_id>/<student_id>', methods = ['POST'])
-def enroll_class(class_id,student_id):
+@ENROLLMENT_BLUEPRINT.route('/eduhub/enrollments/enroll-class', methods = ['POST'])
+def enroll_class():
+    if 'class_id' not in request.json:
+        return 'Missing class_id', 400
+    if 'student_id' not in request.json:
+        return 'Missing student_id', 400
+    class_id = request.json['class_id']
+    student_id = request.json['student_id']
     result = enrollment.enroll_class(class_id,student_id)
     if isinstance(result, Exception):
         return 'Error with the database', 500 
@@ -77,7 +83,13 @@ def enroll_class(class_id,student_id):
     return response
 
 @ENROLLMENT_BLUEPRINT.route('/eduhub/enrollments/unenroll-class/<course_id>/<student_id>', methods = ['DELETE'])
-def unenroll_class(course_id, student_id):
+def unenroll_class():
+    if 'course_id' not in request.json:
+        return 'Missing class_id', 400
+    if 'student_id' not in request.json:
+        return 'Missing student_id', 400
+    course_id = request.json['course_id']
+    student_id = request.json['student_id']
     result = enrollment.unenroll_class(course_id,student_id)
     if isinstance(result, Exception):
         return 'Error with the database', 500 
