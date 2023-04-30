@@ -76,4 +76,4 @@ VALUES ('0001', '2001', '1802'), ('0001', '2001', '1803'),
 SELECT * FROM period
 /*CLASES ASOCIADAS A LOS CURSOS*/
 INSERT INTO class (class.course_id, class.period_id, class.professor_id, class.max_student_capacity)
-VALUES ('0202', 8, 'professor-0202', 25)
+VALUES ('0202', 8, 'professor1-0202', 25), ('0202', 8, 'professor2-0202', 30), ('0202', 9, 'professor1-0202', 20), ('0202', 9, 'professor2-0202', 22)
