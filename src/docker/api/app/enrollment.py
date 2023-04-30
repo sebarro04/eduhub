@@ -165,13 +165,15 @@ def enroll_class(class_id: str,studentId: str, enrollment_period_id: int) -> str
         if (schedule_clash==[]):
             if (spaces==True):
                 db = Database()
-                query = '''INSERT INTO student_class (student_id,class_id)
-                            VALUES (?,?)'''
-                query2 = '''UPDATE class
-                            SET max_student_capacity = max_student_capacity-1
-                            WHERE class.id=?;'''
-                db.cursor.execute(query,studentId,class_id)
-                db.cursor.execute(query2,class_id)
+                query = '''
+                        INSERT INTO student_class (student_id,class_id)
+                        VALUES (?,?)
+
+                        UPDATE class
+                        SET max_student_capacity = max_student_capacity-1
+                        WHERE class.id = ?;
+                        '''
+                db.cursor.execute(query,(studentId, class_id, class_id))
                 db.cursor.commit()
                 return 'Matricula Exitosa'
             else:
@@ -189,15 +191,23 @@ def enroll_class(class_id: str,studentId: str, enrollment_period_id: int) -> str
         print(ex)
         return ex
     
-def unenroll_class(class_id: str,studentId: str) -> bool | Exception:
+def unenroll_class(course_id: str,studentId: str) -> bool | Exception:
     try:
         db = Database()
-        query = '''DELETE FROM student_class WHERE student_class.class_id = ? AND student_class.student_id=?'''
-        query2 = '''UPDATE class
+        query = '''
+                DECLARE @class_id INT
+                SELECT @class_id = cl.id FROM student_class sc
+                INNER JOIN class cl ON sc.class_id = cl.id
+                WHERE cl.course_id = ? AND sc.student_id = ?
+        
+                DELETE FROM student_class 
+                WHERE student_class.class_id = @class_id AND student_class.student_id = ?
+
+                UPDATE class
                         SET max_student_capacity = max_student_capacity+1
-                        WHERE class.id=?;'''
-        db.cursor.execute(query, class_id,studentId)
-        db.cursor.execute(query2,class_id)
+                        WHERE class.id = @class_id;
+                '''
+        db.cursor.execute(query, (course_id, studentId, studentId))
         db.cursor.commit()
         return True
     except Exception as ex:
@@ -340,4 +350,5 @@ def show_reviews ( class_id: str) -> list | Exception:
         return ex
     
 if __name__ == '__main__':
-    print(enroll_class(2, '2021023224', 7))
+    print(unenroll_class('0202', 'I4jurZC2gpNEvpnWGb9iYQkVpXy1'))
+    
