@@ -76,9 +76,9 @@ def enroll_class(class_id,student_id):
     response.status_code = 200
     return response
 
-@ENROLLMENT_BLUEPRINT.route('/eduhub/enrollments/unenroll-class/<class_id>/<student_id>', methods = ['DELETE'])
-def unenroll_class(class_id,student_id):
-    result = enrollment.unenroll_class(class_id,student_id)
+@ENROLLMENT_BLUEPRINT.route('/eduhub/enrollments/unenroll-class/<course_id>/<student_id>', methods = ['DELETE'])
+def unenroll_class(course_id, student_id):
+    result = enrollment.unenroll_class(course_id,student_id)
     if isinstance(result, Exception):
         return 'Error with the database', 500 
     response = jsonify(result)
