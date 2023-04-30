@@ -54,11 +54,7 @@ def download_blob(file_id):
         response.status_code = 500
         return response
     mimetype = mimetypes.guess_type(filename)[0]
-    print(stream, filename, mimetype)
-    """ response = make_response(stream)
-    response.headers.set('Content-Type', mimetype)
-    response.headers.set('Content-Disposition', 'attachment', filename=filename)
-    return response """
+    print(filename, mimetype)
     return send_file(io.BytesIO(stream), mimetype=mimetype, download_name=filename, as_attachment=True)
 
 @BLOBSTORAGE_BLUEPRINT.route('/eduhub/files/<string:user_id>', methods=['GET']) 
