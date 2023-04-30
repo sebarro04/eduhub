@@ -73,7 +73,40 @@ VALUES ('0001', '2001', '1802'), ('0001', '2001', '1803'),
 	   ('0001', '2101', '1802'), ('0001', '2101', '1803'),
 	   ('0001', '3101', '1400'),
 	   ('0001', '1102', '0101')
-SELECT * FROM period
+
 /*CLASES ASOCIADAS A LOS CURSOS*/
 INSERT INTO class (class.course_id, class.period_id, class.professor_id, class.max_student_capacity)
-VALUES ('0202', 8, 'professor1-0202', 25), ('0202', 8, 'professor2-0202', 30), ('0202', 9, 'professor1-0202', 20), ('0202', 9, 'professor2-0202', 22)
+VALUES ('0202', 8, 'professor1-0202', 25), ('0202', 8, 'professor2-0202', 30), ('0202', 9, 'professor1-0202', 20), ('0202', 9, 'professor2-0202', 22),
+	   ('0101', 8, 'professor1-0101', 26), ('0101', 8, 'professor2-0101', 29), ('0101', 9, 'professor1-0101', 21), ('0101', 9, 'professor2-0101', 23),
+	   ('1106', 8, 'professor1-1106', 27), ('1106', 8, 'professor2-1106', 28), ('1106', 9, 'professor1-1106', 22), ('1106', 9, 'professor2-1106', 24),
+	   ('1400', 8, 'professor1-1400', 28), ('1400', 8, 'professor2-1400', 27), ('1400', 9, 'professor1-1400', 23), ('1400', 9, 'professor2-1400', 25),
+	   ('1802', 8, 'professor1-1802', 29), ('1802', 8, 'professor2-1802', 26), ('1802', 9, 'professor1-1802', 24), ('1802', 9, 'professor2-1802', 26),
+	   ('1803', 8, 'professor1-1803', 30), ('1803', 8, 'professor2-1803', 25), ('1803', 9, 'professor1-1803', 25), ('1803', 9, 'professor2-1803', 27),
+	   ('1403', 8, 'professor1-1403', 31), ('1403', 8, 'professor2-1403', 30), ('1403', 9, 'professor1-1403', 26), ('1403', 9, 'professor2-1403', 28),
+	   ('1100', 8, 'professor1-1100', 32), ('1100', 8, 'professor2-1100', 31), ('1100', 9, 'professor1-1100', 27), ('1100', 9, 'professor2-1100', 29),
+	   ('1230', 8, 'professor1-1230', 33), ('1230', 8, 'professor2-1230', 32), ('1230', 9, 'professor1-1230', 28), ('1230', 9, 'professor2-1230', 30),
+	   ('1000', 10, 'professor1-1000', 30), ('1000', 10, 'professor2-1000', 26),
+	   ('2001', 8, 'professor1-2001', 29), ('2001', 8, 'professor2-2001', 27), ('2001', 9, 'professor1-2001', 29), ('2001', 9, 'professor2-2001', 31),
+	   ('2101', 8, 'professor1-2101', 28), ('2101', 8, 'professor2-2101', 28), ('2101', 9, 'professor1-2101', 30), ('2101', 9, 'professor2-2101', 32),
+	   ('3101', 8, 'professor1-3101', 27), ('3101', 8, 'professor2-3101', 29), ('3101', 9, 'professor1-3101', 31), ('3101', 9, 'professor2-3101', 33),
+	   ('1102', 8, 'professor1-1102', 26), ('1102', 8, 'professor2-1102', 30), ('1102', 9, 'professor1-1102', 32), ('1102', 9, 'professor2-1102', 34)
+
+/*ESTUDIANTE POR PLAN DE ESTUDIOS*/
+INSERT INTO student_curriculum (student_curriculum.student_id, student_curriculum.curriculum_id)
+VALUES ('I4jurZC2gpNEvpnWGb9iYQkVpXy1', '0001')
+
+/*PROFESOR POR ESCUELA*/
+INSERT INTO professor_school (professor_school.professor_id, professor_school.school_id)
+VALUES ('professor-compu', 'IC')
+
+/*PERIODOS DE MATRICULA*/
+INSERT INTO enrollment_period (enrollment_period.name, enrollment_period.start_datetime, enrollment_period.end_datetime, enrollment_period.is_open, enrollment_period.period_id)
+VALUES ('Ordinaria', '2023-07-01 07:00:00', '2023-07-02 16:00:00', 0, 8),
+	   ('Ordinaria', '2024-02-01 07:00:00', '2024-02-02 16:00:00', 0, 9),
+	   ('Ordinaria', '2023-07-28 07:00:00', '2023-07-29 16:00:00', 0, 10)
+
+/*ESTUDIANTE POR PERIODO DE MATRICULA*/
+INSERT INTO student_enrollment_period (student_enrollment_period.student_id, student_enrollment_period.enrollment_period_id)
+VALUES ('I4jurZC2gpNEvpnWGb9iYQkVpXy1', 8), ('I4jurZC2gpNEvpnWGb9iYQkVpXy1', 10)
+
+/**/
