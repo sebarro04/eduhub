@@ -103,9 +103,9 @@ def read_all_enrollments_by_student_id(student_id):
     response.status_code = 200
     return response
 
-@ENROLLMENT_BLUEPRINT.route('/eduhub/enrollments/available-courses/<student_id>', methods = ['GET'])
-def read_all_enrollment_courses_by_student_id(student_id):
-    result = enrollment.read_all_enrollment_available_courses_by_student_id(student_id)
+@ENROLLMENT_BLUEPRINT.route('/eduhub/enrollments/available-courses/<student_id>/<enrollment_period_id>', methods = ['GET'])
+def read_all_enrollment_available_courses_by_student_id(student_id, enrollment_period_id):
+    result = enrollment.read_all_enrollment_available_courses_by_student_id(student_id, enrollment_period_id)
     if isinstance(result, Exception):
         return 'Error with the database', 500 
     response = jsonify(result)
