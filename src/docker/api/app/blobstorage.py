@@ -16,7 +16,7 @@ def create_file_url(filename: str, current_time_ms: int) -> str:
     ext = os.path.splitext(filename)[1] # get file extension
     return name + f'-{current_time_ms}' + ext # file url
 
-def create_file(filename: str, description: str | None, file_url: str, user_id: str, creation_datetime: datetime) -> bool | Exception:
+def create_file(filename: str, description: str | None, file_url: str, user_id: str, creation_datetime: datetime | str) -> bool | Exception:
     try:
         db = Database()
         if description != '':
@@ -145,4 +145,4 @@ def delete_blob(file_id: int) -> bool | Exception:
         return Exception('Error deleting the file from Azure')
     
 if __name__ == '__main__':
-    print(read_filename(3))
+    print(read_file_url(-1))
