@@ -5,6 +5,21 @@
     - [1.2. Diagrama De La Base De Datos](#12-diagrama-de-la-base-de-datos)
 - [2. Guía De Instalación](#2-guía-de-instalación)
 - [3. Uso Del Programa](#3-uso-del-programa)
+    - [Función current\_enrollment\_time](#función-current_enrollment_time)
+    - [Función read\_all\_enrollments\_by\_student\_id](#función-read_all_enrollments_by_student_id)
+    - [Función check\_schedule\_clash](#función-check_schedule_clash)
+    - [Función calculate\_enrollment\_hour\_by\_student\_id](#función-calculate_enrollment_hour_by_student_id)
+    - [Función read\_all\_enrollment\_available\_courses\_by\_student\_id](#función-read_all_enrollment_available_courses_by_student_id)
+    - [Función enroll\_class](#función-enroll_class)
+    - [Función unenroll\_class](#función-unenroll_class)
+    - [Función space\_available\_in\_class](#función-space_available_in_class)
+    - [Función enrollment\_start\_time](#función-enrollment_start_time)
+    - [Función enrollment\_end\_time](#función-enrollment_end_time)
+    - [Función enrollment\_start\_date](#función-enrollment_start_date)
+    - [Función enrollment\_end\_date](#función-enrollment_end_date)
+    - [Función read\_all\_classes\_by\_course](#función-read_all_classes_by_course)
+    - [Función generate\_enrollment\_report](#función-generate_enrollment_report)
+    - [Función show\_reviews](#función-show_reviews)
 - [4. Pruebas Realizadas](#4-pruebas-realizadas)
 - [5. Resultados De Pruebas Unitarias](#5-resultados-de-pruebas-unitarias)
 - [6. Conclusiones Y Recomendaciones](#6-conclusiones-y-recomendaciones)
@@ -25,9 +40,18 @@
 
 1. Seguir los pasos del [README de la infraestructura](./src/infrastructure/README.md)
     * Las variables de entorno hay que cambiarlas para que correspondan con los datos de la infraestructura recien creada
-2. Instalar [Docker Desktop](https://www.docker.com/products/docker-desktop/)
-3. Ir al directorio **src/docker**
-4. Ejecutar el archivo **build-api.bat**
+2. Instalar [SQL Server Management Studio](https://learn.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms?view=sql-server-ver16)
+3. Entrar a [Azure](https://azure.microsoft.com/es-es/get-started/azure-portal)
+4. Buscar el sql server creado en el terraform
+5. Dentro del SQL Server, ir al apartado **Security/Networking**
+6. En **Firewall rules** se debe presionar el botón de añadir su direción IPv4
+    * Para cada persona que desea usar la base de datos, se le debe añadir en el botón de añadir regla de firewall
+7. Logearse en SQL Server Management Studio con las credenciales que retorno el terraform
+8. Abrir el archivo **src/sql/database-script-azure.sql** en SQL Server Management Studio
+9. Ejecutar todo el script para crear el modelo de la base de datos
+10. Instalar [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+11. Ir al directorio **src/docker**
+12. Ejecutar el archivo **build-api.bat**
     * Desde consola:
     
         ```bash
@@ -36,11 +60,11 @@
 
     * Desde el explorador de archivos solo hay que dar doble click al archivo
 
-5. Una vez terminado, para verificar que funcione el api, se debe ir a su cuenta de [Azure](https://azure.microsoft.com/es-es/get-started/azure-portal)
-6. Dentro de Microsoft Azure se debe buscar **main-app**
-7. Dentro de **main-app** en **Overview** se encuentra la url del api donde dice **Application Url**.
-8. Abrir el link.
-9. Si todo está correcto se desplegará lo siguiente en el navegador:
+13. Una vez terminado, para verificar que funcione el api, se debe ir a su cuenta de [Azure](https://azure.microsoft.com/es-es/get-started/azure-portal)
+14. Dentro de Microsoft Azure se debe buscar **main-app**
+15. Dentro de **main-app** en **Overview** se encuentra la url del api donde dice **Application Url**.
+16. Abrir el link.
+17. Si todo está correcto se desplegará lo siguiente en el navegador:
 
 ![Página principal API](docs/resources/imgs/api-main-page.png)
 
