@@ -83,7 +83,7 @@ def enroll_class():
     response.status_code = 200
     return response
 
-@ENROLLMENT_BLUEPRINT.route('/eduhub/enrollments/unenroll-class/<course_id>/<student_id>', methods = ['DELETE'])
+@ENROLLMENT_BLUEPRINT.route('/eduhub/enrollments/unenroll-class', methods = ['POST'])
 def unenroll_class():
     if 'course_id' not in request.json:
         return 'Missing class_id', 400
