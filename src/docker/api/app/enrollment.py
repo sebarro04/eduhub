@@ -313,7 +313,7 @@ def generate_enrollment_report( student_id: str,enrollment_period_id: str) -> li
     try:
         db = Database()
         query = '''
-                SELECT class.course_id, course.name, class.period_id, class.professor_id, schedule.start_time,schedule.end_time, day.name
+                SELECT class.course_id, course.name, class.period_id, class.professor_id, STRING_AGG(CONCAT(day.name, ': ', CONVERT(varchar(5), schedule.start_time, 108), '-', CONVERT(varchar(5), schedule.end_time, 108)), '; ') AS class_schedule
                 FROM student_class 
                 INNER JOIN class ON student_class.class_id=class.id 
                 INNER JOIN course ON class.course_id=course.id
@@ -322,6 +322,7 @@ def generate_enrollment_report( student_id: str,enrollment_period_id: str) -> li
                 INNER JOIN enrollment_period ON class.period_id=enrollment_period.period_id
                 WHERE student_class.student_id=?
                 AND enrollment_period.id=?
+                GROUP BY class.course_id, course.name, class.period_id, class.professor_id
                 '''
         db.cursor.execute(query,student_id, enrollment_period_id)
         result = db.cursor.fetchall()
@@ -351,6 +352,7 @@ def show_reviews ( class_id: str) -> list | Exception:
         print(ex)
         return ex
     
+
 if __name__ == '__main__':
     print(generate_enrollment_report('2021023224', '8'))
     
