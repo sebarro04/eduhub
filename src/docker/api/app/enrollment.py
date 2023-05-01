@@ -58,6 +58,29 @@ def check_schedule_clash(new_class_id: str,studentId: str) -> list | Exception:
         print(ex)
         return ex
 
+def calculate_period_average(studentID: str) -> int | None | Exception:
+    try:
+        db = Database()
+        query = '''
+                SELECT (SUM(gr.grade * c.credits) / SUM(c.credits)) AS period_student_average
+                FROM grade_record gr 
+                INNER JOIN course c ON gr.course_id = c.id
+                INNER JOIN period p ON gr.period_id = p.id
+                WHERE p.end_date = (SELECT TOP 1 p.end_date
+                                    FROM period p
+                                    INNER JOIN grade_record gr ON p.id = gr.period_id
+                                    WHERE gr.student_id = ?
+                                    ORDER BY end_date DESC)
+                                    AND gr.student_id = ?
+                '''
+        db.cursor.execute(query, (studentID, studentID))
+        result = db.cursor.fetchone()[0]  # obtiene el resultado de la consulta
+        db.cursor.commit()
+        return result  # devuelve el resultado de la consulta
+    except Exception as ex:
+        print(ex)
+        return ex
+    
 def calculate_enrollment_hour_by_student_id(student_id : str,enrollment_period_id: str) -> list | Exception:
     try:
         average=calculate_period_average(student_id)
@@ -78,25 +101,6 @@ def calculate_enrollment_hour_by_student_id(student_id : str,enrollment_period_i
         print(ex)
         return ex
     
-def calculate_period_average(studentID: str) -> int | Exception:
-    try:
-        db = Database()
-        query = '''
-                SELECT TOP 1 (SUM(gr.grade * c.credits) / SUM(c.credits)) AS period_student_average
-                FROM grade_record gr 
-                INNER JOIN course c ON gr.course_id = c.id
-                INNER JOIN period p ON gr.period_id = p.id
-                WHERE gr.student_id = ?
-                GROUP BY p.end_date
-                ORDER BY p.end_date DESC
-                '''
-        db.cursor.execute(query, (studentID))
-        result = db.cursor.fetchone()[0]  # obtiene el resultado de la consulta
-        db.cursor.commit()
-        return result  # devuelve el resultado de la consulta
-    except Exception as ex:
-        print(ex)
-        return ex
     
 def read_all_enrollment_available_courses_by_student_id(studentID: str, enrollment_period_id: int) -> list | Exception:
     try:
@@ -353,5 +357,5 @@ def show_reviews ( class_id: str) -> list | Exception:
     
 
 if __name__ == '__main__':
-    print(generate_enrollment_report('2021023224', '8'))
+    print(calculate_period_average('2021023224'))
     
