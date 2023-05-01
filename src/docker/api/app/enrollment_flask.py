@@ -99,8 +99,8 @@ def unenroll_class():
     return response
 
 @ENROLLMENT_BLUEPRINT.route('/eduhub/enrollments/student-hour/<student_id>/<student_enrollment_period_id>', methods = ['GET'])
-def calculate_enrollment_hour_by_student_id(student_id,student_enrollment_period_id):
-    result = enrollment.calculate_enrollment_hour_by_student_id(student_id,student_enrollment_period_id)
+def calculate_enrollment_hour_by_student_id(student_id,enrollment_period_id):
+    result = enrollment.calculate_enrollment_hour_by_student_id(student_id,enrollment_period_id)
     if isinstance(result, Exception):
         return 'Error with the database', 500 
     response = jsonify(result)

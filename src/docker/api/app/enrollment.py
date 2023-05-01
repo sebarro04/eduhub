@@ -1,13 +1,12 @@
 from Database import Database
 
-def current_enrollment_time(student_enrollment_period_id) -> int | Exception:
+def current_enrollment_time(enrollment_period_id) -> int | Exception:
     try:
         db = Database()
         query = '''SELECT DATEPART(hour, start_datetime)
-                FROM student_enrollment_period
-                INNER JOIN enrollment_period ON student_enrollment_period.enrollment_period_id = enrollment_period.id 
-                WHERE student_enrollment_period.id =?'''
-        db.cursor.execute(query, student_enrollment_period_id)
+                FROM enrollment_period
+                WHERE enrollment_period.id =?'''
+        db.cursor.execute(query, enrollment_period_id)
         result = db.cursor.fetchone()[0]  # obtiene el resultado de la consulta
         db.cursor.commit()
         return result  # devuelve el resultado de la consulta
@@ -59,10 +58,10 @@ def check_schedule_clash(new_class_id: str,studentId: str) -> list | Exception:
         print(ex)
         return ex
 
-def calculate_enrollment_hour_by_student_id(student_id : str,student_enrollment_period_id: str) -> list | Exception:
+def calculate_enrollment_hour_by_student_id(student_id : str,enrollment_period_id: str) -> list | Exception:
     try:
         average=calculate_period_average(student_id)
-        start_enrrollment=current_enrollment_time(student_enrollment_period_id)
+        start_enrrollment=current_enrollment_time(enrollment_period_id)
         enrollment_time=start_enrrollment   
         if (average>90 and average<=95):
             enrollment_time += 1
