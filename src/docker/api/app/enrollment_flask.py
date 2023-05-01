@@ -98,7 +98,7 @@ def unenroll_class():
     response.status_code = 200
     return response
 
-@ENROLLMENT_BLUEPRINT.route('/eduhub/enrollments/student-hour/<student_id>/<student_enrollment_period_id>', methods = ['GET'])
+@ENROLLMENT_BLUEPRINT.route('/eduhub/enrollments/student-hour/<student_id>/<enrollment_period_id>', methods = ['GET'])
 def calculate_enrollment_hour_by_student_id(student_id,enrollment_period_id):
     result = enrollment.calculate_enrollment_hour_by_student_id(student_id,enrollment_period_id)
     if isinstance(result, Exception):
