@@ -1,9 +1,0 @@
-# infrastructure
-src/infrastructure/.terraform
-src/infrastructure/.terraform.lock.hcl
-
-# api
-src/docker/api/app/__pycache__
-
-# commands
-src/docker/restart-containerapp.bat
