@@ -75,7 +75,8 @@ def enroll_class():
         return 'Missing student_id', 400
     class_id = request.json['class_id']
     student_id = request.json['student_id']
-    result = enrollment.enroll_class(class_id,student_id)
+    enrollment_period_id = request.json['enrollment_period_id']
+    result = enrollment.enroll_class(class_id,student_id, enrollment_period_id)
     if isinstance(result, Exception):
         return 'Error with the database', 500 
     response = jsonify(result)
