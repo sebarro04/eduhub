@@ -86,7 +86,9 @@ def calculate_enrollment_hour_by_student_id(student_id : str,enrollment_period_i
         average=calculate_period_average(student_id)
         start_enrrollment=current_enrollment_time(enrollment_period_id)
         enrollment_time=start_enrrollment   
-        if (average>90 and average<=95):
+        if (average==None):
+            enrollment_time =enrollment_time
+        elif (average>90 and average<=95):
             enrollment_time += 1
         elif(average>85 and average<=90):
             enrollment_time += 2 
@@ -357,5 +359,5 @@ def show_reviews ( class_id: str) -> list | Exception:
     
 
 if __name__ == '__main__':
-    print(calculate_period_average('2021023224'))
+    print(calculate_enrollment_hour_by_student_id('2021023224','8'))
     
