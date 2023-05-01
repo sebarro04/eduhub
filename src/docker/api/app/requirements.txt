@@ -2,4 +2,5 @@ flask
 pyodbc
 azure.storage.blob
 azure.identity
+azure-cosmos
 python-decouple

@@ -4,7 +4,6 @@ from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient
 from decouple import config
 from datetime import datetime
 import os
-import io
 from Database import Database
 
 BLOB_STORAGE_URL = config('BLOB_STORAGE_URL')
