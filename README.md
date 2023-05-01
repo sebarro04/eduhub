@@ -23,6 +23,27 @@
 
 ## 2. Guía De Instalación
 
+1. Seguir los pasos del [README de la infraestructura](./src/infrastructure/README.md)
+    * Las variables de entorno hay que cambiarlas para que correspondan con los datos de la infraestructura recien creada
+2. Instalar [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+3. Ir al directorio **src/docker**
+4. Ejecutar el archivo **build-api.bat**
+    * Desde consola:
+    
+        ```bash
+        .\build-api.bat
+        ```
+
+    * Desde el explorador de archivos solo hay que dar doble click al archivo
+
+5. Una vez terminado, para verificar que funcione el api, se debe ir a su cuenta de [Azure](https://azure.microsoft.com/es-es/get-started/azure-portal)
+6. Dentro de Microsoft Azure se debe buscar **main-app**
+7. Dentro de **main-app** en **Overview** se encuentra la url del api donde dice **Application Url**.
+8. Abrir el link.
+9. Si todo está correcto se desplegará lo siguiente en el navegador:
+
+![Página principal API](docs/resources/imgs/api-main-page.png)
+
 ## 3. Uso Del Programa
 
 ## 4. Pruebas Realizadas
