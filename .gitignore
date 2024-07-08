@@ -3,3 +3,4 @@
 terraform.tfstate.backup
 src/infrastructure/terraform.tfstate
 src/infrastructure/terraform.tfstate.backup
+src/infrastructure/ssh/id_rsa
